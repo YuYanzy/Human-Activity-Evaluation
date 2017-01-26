@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-__author__ = 'eirikaa'
-
 import os
-from flask import Flask, request#, jsonify
+from flask import Flask, request  #, jsonify
 from flask_jsonpify import jsonify
 import csv
 import time
+
+__author__ = 'eirikaa'
 
 app = Flask(__name__)
 
@@ -28,10 +28,10 @@ Z = 0
 ACTIVITY = "Unknown"
 
 # Output
-OUTPUT_NAME = "output"
+GNSS_OUTPUT = "geolocation"
+ACCELEROMETER_OUTPUT = "accelerometer"
 FILEFORMAT = ".csv"
 
-I = 0
 
 @app.route("/")
 def index():
@@ -40,8 +40,27 @@ def index():
     """
     return html
 
-@app.route("/store")
-def store_data(lat=LAT,lon=LON,speed=SPEED,accuracy=ACCURACY,altitude=ALTITUDE,altitudeAcurracy=ALTITUDEACCURACY,heading=HEADING,x=X,y=Y,z=Z, i = I):
+
+@app.route("/storeGNSS")
+def store_GNSS(lat=LAT,lon=LON,speed=SPEED,accuracy=ACCURACY,altitude=ALTITUDE,altitudeAcurracy=ALTITUDEACCURACY,heading=HEADING, activity = ACTIVITY):
+    def write_csv(lat, lon, speed, accuracy, altitude, heading, time, activity, output_GNSS=GNSS_OUTPUT, fileformat=FILEFORMAT):
+        # csv_writer = csv.writer(open(output_csv, "w"))
+        # # TODO: fikse time, få med navn
+        # # csv_writer.writerow(["Index", "Lat", "Lon", "Speed", "Accuracy", "AltitudeAccuracy", "Heading", "X", "Y", "Z", "Time"])
+        # csv_writer.writerow(["bla", lat, lon, speed, accuracy, altitudeAcurracy, heading, x, y, z, '\r\n'])
+        # TODO: this must be moved, not sure how to solve this
+        # TODO: Maybe move a file to a storage after it has produced so many lines
+
+        i = 0
+        # if os.path.exists(output_name + str(i) + fileformat):
+        #     if bufcount(output_name + str(i) + fileformat) > 10:
+        #         i += 1
+
+        with open(output_GNSS + str(i) + fileformat, "a+") as f:
+            f.write("bla" + " " + str(lat) + " " + str(lon) + " " + str(speed) + " " + str(accuracy) + " " +
+                    str(altitude) + " " + str(heading) + " " + str(time) + " " + str(activity) + " " + "\n")
+
+    # GEOLOCATION
     lat = float((request.args.get("lat", lat)))
     lon = float((request.args.get("lon", lon)))
     speed = float((request.args.get("speed", speed)))
@@ -50,41 +69,46 @@ def store_data(lat=LAT,lon=LON,speed=SPEED,accuracy=ACCURACY,altitude=ALTITUDE,a
     # altitudeAcurracy = float((request.args.get("altitudeAccuracy", altitudeAcurracy)))
     heading = float((request.args.get("heading", heading)))
 
+    # TRUTH DATA
+    activity = (request.args.get("activity", activity))
+
+    write_csv(lat, lon, speed, accuracy, altitude, heading, time.time(), activity)
+
+    return jsonify("bla" + " " + str(lat) + " " + str(lon) + " " + str(speed) + " " + str(accuracy) + " " + str(altitude) + " "
+                    + str(heading) + " " + str(time.time()) + " " + str(activity))
+
+
+@app.route("/storeACCELEROMETER")
+def store_accelerometer(x=X,y=Y,z=Z, activity = ACTIVITY):
+    def write_csv(x, y, z, time, activity, output_accelerometer=ACCELEROMETER_OUTPUT, fileformat=FILEFORMAT):
+        # csv_writer = csv.writer(open(output_csv, "w"))
+        # # TODO: fikse time, få med navn
+        # # csv_writer.writerow(["Index", "Lat", "Lon", "Speed", "Accuracy", "AltitudeAccuracy", "Heading", "X", "Y", "Z", "Time"])
+        # csv_writer.writerow(["bla", lat, lon, speed, accuracy, altitudeAcurracy, heading, x, y, z, '\r\n'])
+        # TODO: this must be moved, not sure how to solve this
+        # TODO: Maybe move a file to a storage after it has produced so many lines
+
+        i = 0
+        # if os.path.exists(output_name + str(i) + fileformat):
+        #     if bufcount(output_name + str(i) + fileformat) > 10:
+        #         i += 1
+
+        with open(output_accelerometer + str(i) + fileformat, "a+") as f:
+            f.write(
+                "bla" + " " + str(x) + " " + str(y) + " " + str(z) + " " + str(time) + " " + str(activity) + " " + "\n")
+
+    # ACCELEROMETER
     x = float((request.args.get("x", x)))
     y = float((request.args.get("y", y)))
     z = float((request.args.get("z", z)))
 
-    # write_csv(lat, lon, speed, accuracy, altitude, altitudeAcurracy, heading, x, y, z)
+    # TRUTH DATA
+    activity = (request.args.get("activity", activity))
 
-    write_csv(lat, lon, speed, accuracy, altitude, heading, x, y, z, time.time())
+    write_csv(x, y, z, time.time(), activity)
 
-    # return jsonify(lat, lon, speed, accuracy, altitudeAcurracy, heading, x, y, z)
-    return jsonify("bla" + " " + str(lat) + " " + str(lon) + " " + str(speed) + " " + str(accuracy) + " " + str(altitude) + " "
-                    + str(heading) + " " + str(x) + " " + str(y) + " " + str(z) + " " + str(time.time()) + " " + "\n")
+    return jsonify("bla" + " " + str(x) + " " + str(y) + " " + str(z) + " " + str(time.time()) + " " + str(activity))
 
-
-def _helper():
-    i = 0
-    return i
-
-def write_csv(lat, lon, speed, accuracy, altitude, heading, x, y, z, time,  output_name = OUTPUT_NAME, fileformat = FILEFORMAT):
-
-    # csv_writer = csv.writer(open(output_csv, "w"))
-    # # TODO: fikse time, få med navn
-    # # csv_writer.writerow(["Index", "Lat", "Lon", "Speed", "Accuracy", "AltitudeAccuracy", "Heading", "X", "Y", "Z", "Time"])
-    # csv_writer.writerow(["bla", lat, lon, speed, accuracy, altitudeAcurracy, heading, x, y, z, '\r\n'])
-    # TODO: this must be moved, not sure how to solve this
-    # TODO: Maybe move a file to a storage after it has produced so many lines
-
-    i = _helper()
-
-    if os.path.exists(output_name + str(i) + fileformat):
-        if bufcount(output_name + str(i) + fileformat) > 10:
-            i += 1
-
-    with open (output_name + str(i) + fileformat, "a+") as f:
-        f.write("bla" + " " + str(lat) + " " + str(lon) + " " + str(speed) + " " + str(accuracy) + " " + str(altitude) + " "
-                    + str(heading) + " " + str(x) + " " + str(y) + " " + str(z) + " " + str(time) + " " + "\n")
 
 
 def bufcount(filename):
@@ -99,12 +123,6 @@ def bufcount(filename):
         buf = read_f(buf_size)
 
     return lines
-
-@app.route("/test")
-def test(activity = ACTIVITY):
-    activity = (request.args.get("activity", activity))
-    return jsonify(activity)
-
 
 
 if __name__ == '__main__':
