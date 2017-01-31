@@ -5,6 +5,7 @@ from flask import Flask, request  #, jsonify
 from flask_jsonpify import jsonify
 import csv
 import time
+import math
 
 __author__ = 'eirikaa'
 
@@ -36,7 +37,9 @@ FILEFORMAT = ".csv"
 @app.route("/")
 def index():
     html = """<h1>This API will store geodata from an app</h1>
-    <p> Use /store?x=[x]&y=[y]&z=[z] </p>
+    <p> Use /storeACCELEROMETER?x=[x]&y=[y]&z=[z]&activity=[activity]</p>
+    <p> For geolocation use
+    <p> Use /storeGNSS?</p>
     """
     return html
 
@@ -95,7 +98,8 @@ def store_accelerometer(x=X,y=Y,z=Z, activity = ACTIVITY):
 
         with open(output_accelerometer + str(i) + fileformat, "a+") as f:
             f.write(
-                "bla" + " " + str(x) + " " + str(y) + " " + str(z) + " " + str(time) + " " + str(activity) + " " + "\n")
+                "bla" + " " + str(x) + " " + str(y) + " " + str(z) + " "+ str(math.sqrt((x)**2+(y)**2+(z)**2)) + " " + str(time) + " " + str(activity) + " " + "\n")
+    # TODO: trekke fra 9.81 i absoluttverdien, evt sjekk ut low pass og high pass
 
     # ACCELEROMETER
     x = float((request.args.get("x", x)))

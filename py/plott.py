@@ -1,48 +1,46 @@
-__author__ = 'eirikaa'
+# -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
 import csv
 
-def loadtxt():
-    # with open ('results_dasstur.txt', 'r') as r:
-    #     # print r.read()
-    #     lines = r.read().splitlines()
-    #     one=lines[:][:15]
-    #     four = lines[47:]
-    #     print one
-    #     print four
-    filename='results_dasstur.csv'
+__author__ = 'eirikaa'
+
+
+def loadcsv():
+
+    filename = 'accelerometer0.csv'
     rows = []
-    one = []
-    two = []
-    three = []
-    four = []
+    x = []
+    y = []
+    z = []
+    time = []
+    absoloute = []
     csvfile = open(filename, 'r')
-    csv_reader = csv.reader(csvfile, delimiter = ' ')
+    csv_reader = csv.reader(csvfile, delimiter=' ')
     for row in csv_reader:
         rows.append(row)
     csvfile.close()
 
-    for i in rows:
-        one.append(i[0])
-        two.append(i[1])
-        three.append(i[2])
-        four.append(i[3])
+    for data in rows:
+        x.append(data[1])
+        y.append(data[2])
+        z.append(data[3])
+        time.append(data[5])
+        absoloute.append(data[4])
 
-    x_list = map(float, one)
-    y_list = map(float, two)
-    z_list = map(float, three)
+    x_list = list(map(float, x))
+    y_list = list(map(float, y))
+    z_list = list(map(float, z))
+    xyz_list = list(map(float, absoloute))
+    time_list = list(map(float, time))
+    return x_list, y_list, z_list, time_list, xyz_list
 
-    x_list[:] = [x*10 for x in x_list]
-    y_list[:] = [y*10 for y in y_list]
-    z_list[:] = [z*10 for z in z_list]
-    time_list = map(float, four)
-    return x_list, y_list, z_list, time_list
 
 def plot(x_list, y_list, z_list, time_list, klasse_x, klasse_y, klasse_z):
-    plt.plot(time_list, x_list, 'r', label = 'x-axis')
-    plt.plot(time_list, y_list, 'b', label = 'y-axis')
-    plt.plot(time_list, z_list, 'g', label = 'z-axis')
+
+    plt.plot(time_list, x_list, 'r', label='x-axis')
+    plt.plot(time_list, y_list, 'b', label='y-axis')
+    plt.plot(time_list, z_list, 'g', label='z-axis')
     plt.plot(time_list, klasse_x, 'ro')
     plt.plot(time_list, klasse_y, 'bo')
     plt.plot(time_list, klasse_z, 'go')
@@ -55,19 +53,25 @@ def plot(x_list, y_list, z_list, time_list, klasse_x, klasse_y, klasse_z):
 
 
 def diff(x_list, y_list, z_list, time_list):
+
     diff_x = []
     diff_y = []
     diff_z = []
-    for i in range(0,len(time_list)-5, 5):
-        diff_x.append(abs(max(x_list[i:i+5]) - min(x_list[i:i+5])))
-        diff_y.append(abs(max(y_list[i:i+5]) - min(y_list[i:i+5])))
-        diff_z.append(abs(max(z_list[i:i+5]) - min(z_list[i:i+5])))
+
+    for value in range(0, len(time_list)-5, 5):
+        diff_x.append(abs(max(x_list[value:value+5]) - min(x_list[value:value+5])))
+        diff_y.append(abs(max(y_list[value:value+5]) - min(y_list[value:value+5])))
+        diff_z.append(abs(max(z_list[value:value+5]) - min(z_list[value:value+5])))
+
     return diff_x, diff_y, diff_z
 
+
 def classify(diff_x, diff_y, diff_z):
+
     class_list_x = []
     class_list_y = []
     class_list_z = []
+
     for diff in diff_x:
         if diff >= 1:
             class_list_x.append(30)
@@ -89,7 +93,6 @@ def classify(diff_x, diff_y, diff_z):
             class_list_y.append(35)
         else:
             class_list_y.append(-35)
-
 
     for j in class_list_y:
         klasse_y.append(j)
@@ -113,24 +116,24 @@ def classify(diff_x, diff_y, diff_z):
 
     return class_list_x, klasse_x, class_list_y, klasse_y, class_list_z, klasse_z
 
+
 if __name__ == '__main__':
 
-    x_list, y_list, z_list, time_list = loadtxt()
-    diff_x, diff_y, diff_z  = diff(x_list, y_list, z_list, time_list)
+    x_list, y_list, z_list, time_list, xyz_list = loadcsv()
+
+    diff_x, diff_y, diff_z = diff(x_list, y_list, z_list, time_list)
     class_list_x, klasse_x, class_list_y, klasse_y, class_list_z, klasse_z = classify(diff_x, diff_y, diff_z)
-    klasse_x.append(1)
-    klasse_x.append(1)
-    klasse_x.append(1)
-    klasse_x.append(1)
 
+    klasse_x.append(1)
+    klasse_x.append(1)
     klasse_y.append(1)
     klasse_y.append(1)
-    klasse_y.append(1)
-    klasse_y.append(1)
-
-    klasse_z.append(1)
-    klasse_z.append(1)
     klasse_z.append(1)
     klasse_z.append(1)
 
+    print(len(time_list))
+    print(len(x_list))
+    print(len(y_list))
+    print(len(z_list))
+    print(len(klasse_x))
     plot(x_list, y_list, z_list, time_list, klasse_x, klasse_y, klasse_z)
