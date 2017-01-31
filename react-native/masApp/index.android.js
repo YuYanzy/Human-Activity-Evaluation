@@ -68,14 +68,16 @@ export default class masApp extends Component {
                     // altitudeAccuracy: altitudeAccuracy,
                     heading: heading
                 });
+                this.fetchGeolocation(lat,lon,speed,accuracy,altitude,heading,this.state.activity);
+                // TODO: test geolocation her, hindre geolocation i å rendre eller sensorene
 
             },
             (error) => alert(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 20000, maximumAge: 0, setInterval: 50000}
+            {enableHighAccuracy: false, timeout: 20000, maximumAge: 0, setInterval: 300}
             //FIXME: setintervall?
         );
 
-        SensorManager.startAccelerometer(100); // Start the accelerometer with a minimum delay of 100 ms between events
+        SensorManager.startAccelerometer(300); // Start the accelerometer with a minimum delay of 100 ms between events
         DeviceEventEmitter.addListener("Accelerometer", function (data) {
             var x = data.x;
             var y = data.y;
@@ -88,13 +90,12 @@ export default class masApp extends Component {
             });
         }.bind(this));
 
-
-
-        SensorManager.startGyroscope(100);
+/*
+        SensorManager.startGyroscope(300);
         DeviceEventEmitter.addListener("Gyroscope", function (data) {
             var xg = data.x;
             var yg = data.y;
-            var zg= data.z;
+            var zg = data.z;
 
             this.setState({
                 xg: xg,
@@ -103,7 +104,7 @@ export default class masApp extends Component {
             });
         }.bind(this));
 
-        SensorManager.startOrientation(100);
+        SensorManager.startOrientation(300);
         DeviceEventEmitter.addListener('Orientation', function (data) {
             var azimuth = data.azimuth; // Yaw
             var pitch = data.pitch;
@@ -117,25 +118,23 @@ export default class masApp extends Component {
 
         }.bind(this));
 
-        SensorManager.startStepCounter(1000);
+        SensorManager.startStepCounter(300);
         DeviceEventEmitter.addListener('StepCounter', function (data) {
             var steps = data.steps;
 
             this.setState({
                 steps: steps
             });
-        }.bind(this));
-
-    //     //TODO maybe this wil work better?
+        }.bind(this));*/
     }
 
 
 
-    fetchData(lat, lon, speed, accuracy, altitude, heading, x, y, z) {
+    fetchGeolocation(lat, lon, speed, accuracy, altitude, heading, activity) {
 
 
-        // var URL = "http://10.243.0.214:5000/store?lat=" + lat + "&lon=" + lon + "&speed=" + speed + "&accuracy=" + accuracy + "&altitude=" + altitude + "&altitudeAccuracy=" + altitudeAccuracy + "&heading=" + heading + "&x=" + x + "&y=" + y + "&z=" + z;
-        var URL = "http://10.243.0.232:5000/store?lat=" + lat + "&lon=" + lon + "&speed=" + speed + "&accuracy=" + accuracy + "&altitude=" + altitude +  "&heading=" + heading + "&x=" + x + "&y=" + y + "&z=" + z;
+        var URL = "http://10.243.0.251:5000/storeGNSS?lat=" + lat + "&lon=" + lon + "&speed=" + speed +
+            "&accuracy=" + accuracy + "&altitude=" + altitude +  "&heading=" + heading + "&activity=" + activity;
 
         fetch(URL)
         // TODO: don't actually need a response
@@ -143,13 +142,16 @@ export default class masApp extends Component {
             .then((responseData) => {
             })
             .catch((error) => {
-                alert("Something wrong with fetch")
+                alert("Something wrong with fetch gnss")
             })
             .done();
     }
 
-    fetchText(activity) {
-        var URL = "http://10.243.0.232:5000/test?activity=" + activity;
+    fetchAccelerometer(x, y, z, activity) {
+
+
+        var URL = "http://10.243.0.251:5000/storeACCELEROMETER?&x=" + x + "&y=" + y +
+            "&z=" + z + "&activity=" + activity;
 
         fetch(URL)
         // TODO: don't actually need a response
@@ -157,10 +159,11 @@ export default class masApp extends Component {
             .then((responseData) => {
             })
             .catch((error) => {
-                alert("Something wrong with fetch2")
+                alert("Something wrong with fetch accelerometer")
             })
             .done();
     }
+
 
 
     // shouldComponentUpdate(){
@@ -169,7 +172,6 @@ export default class masApp extends Component {
     // }
 
     textInput = (text) => {
-        // this.setState({activity:activity});
         this.setState((state) =>{
             return {
                 activity: text
@@ -179,9 +181,9 @@ export default class masApp extends Component {
     };
 
     render(){
-        this.fetchData(this.state.lat,this.state.lon,this.state.speed,this.state.accuracy, this.state.altitude, this.state.heading, this.state.x, this.state.y, this.state.z);
-        this.fetchText(this.state.activity);
-
+        // TODO: if prevLocation =! New location then this.fetchGeolocation
+        // this.fetchGeolocation(this.state.lat,this.state.lon,this.state.speed,this.state.accuracy, this.state.altitude, this.state.heading, this.state.activity);
+        this.fetchAccelerometer(this.state.x, this.state.y, this.state.z, this.state.activity);
         return (
             <View>
               <Text>
@@ -193,14 +195,8 @@ export default class masApp extends Component {
                 <Text style={styles.title}>X: </Text> {this.state.x}
                 <Text style={styles.title}>Y: </Text> {this.state.y}
                 <Text style={styles.title}>Z: </Text> {this.state.z}
-                <Text style={styles.title}>XG: </Text> {this.state.xg}
-                <Text style={styles.title}>YG: </Text> {this.state.yg}
-                <Text style={styles.title}>ZG: </Text> {this.state.zg}
-                <Text style={styles.title}>Azimuth: </Text> {this.state.azimuth}
-                <Text style={styles.title}>Pitch: </Text> {this.state.pitch}
-                <Text style={styles.title}>Roll: </Text> {this.state.roll}
-                <Text style={styles.title}>Steps: </Text> {this.state.steps}
-                  <Text style={styles.title}>Activity: </Text> {this.state.activity}
+
+                <Text style={styles.title}>Activity: </Text> {this.state.activity}
               </Text>
 
             <TextInput
