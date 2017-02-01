@@ -8,7 +8,7 @@ __author__ = 'eirikaa'
 
 def loadcsv():
 
-    filename = 'accelerometer0.csv'
+    filename = 'data/accelerometer0.csv'
     rows = []
     x = []
     y = []
@@ -126,8 +126,14 @@ if __name__ == '__main__':
 
     klasse_x.append(1)
     klasse_x.append(1)
+    klasse_x.append(1)
+    klasse_x.append(1)
     klasse_y.append(1)
     klasse_y.append(1)
+    klasse_y.append(1)
+    klasse_y.append(1)
+    klasse_z.append(1)
+    klasse_z.append(1)
     klasse_z.append(1)
     klasse_z.append(1)
 

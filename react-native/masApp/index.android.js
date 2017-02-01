@@ -133,7 +133,7 @@ export default class masApp extends Component {
     fetchGeolocation(lat, lon, speed, accuracy, altitude, heading, activity) {
 
 
-        var URL = "http://10.243.0.251:5000/storeGNSS?lat=" + lat + "&lon=" + lon + "&speed=" + speed +
+        var URL = "http://188.166.168.99:5000/storeGNSS?lat=" + lat + "&lon=" + lon + "&speed=" + speed +
             "&accuracy=" + accuracy + "&altitude=" + altitude +  "&heading=" + heading + "&activity=" + activity;
 
         fetch(URL)
@@ -150,7 +150,7 @@ export default class masApp extends Component {
     fetchAccelerometer(x, y, z, activity) {
 
 
-        var URL = "http://10.243.0.251:5000/storeACCELEROMETER?&x=" + x + "&y=" + y +
+        var URL = "http://188.166.168.99.5000:5000/storeACCELEROMETER?&x=" + x + "&y=" + y +
             "&z=" + z + "&activity=" + activity;
 
         fetch(URL)
