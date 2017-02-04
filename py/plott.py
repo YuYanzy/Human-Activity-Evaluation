@@ -68,12 +68,14 @@ def diff(x_list, y_list, z_list, time_list):
 
 def classify(diff_x, diff_y, diff_z):
 
+    diff_threshold = 2.5
+
     class_list_x = []
     class_list_y = []
     class_list_z = []
 
     for diff in diff_x:
-        if diff >= 1:
+        if diff >= diff_threshold:
             class_list_x.append(30)
         else:
             class_list_x.append(-30)
@@ -89,7 +91,7 @@ def classify(diff_x, diff_y, diff_z):
         klasse_x.append(j)
 
     for diff in diff_y:
-        if diff >= 1:
+        if diff >= diff_threshold:
             class_list_y.append(35)
         else:
             class_list_y.append(-35)
@@ -102,7 +104,7 @@ def classify(diff_x, diff_y, diff_z):
         klasse_y.append(j)
 
     for diff in diff_z:
-        if diff >= 1:
+        if diff >= diff_threshold:
             class_list_z.append(40)
         else:
             class_list_z.append(-40)
@@ -127,19 +129,24 @@ if __name__ == '__main__':
     klasse_x.append(1)
     klasse_x.append(1)
     klasse_x.append(1)
-    klasse_x.append(1)
+    # klasse_x.append(1)
+    # klasse_x.append(1)
     klasse_y.append(1)
     klasse_y.append(1)
     klasse_y.append(1)
-    klasse_y.append(1)
+    # klasse_y.append(1)
+    # klasse_y.append(1)
     klasse_z.append(1)
     klasse_z.append(1)
     klasse_z.append(1)
-    klasse_z.append(1)
+    # klasse_z.append(1)
+    # klasse_z.append(1)
 
     print(len(time_list))
     print(len(x_list))
     print(len(y_list))
     print(len(z_list))
     print(len(klasse_x))
-    plot(x_list, y_list, z_list, time_list, klasse_x, klasse_y, klasse_z)
+    plt.plot(time_list, xyz_list)
+    plt.show()
+    # plot(x_list, y_list, z_list, time_list, klasse_x, klasse_y, klasse_z)
