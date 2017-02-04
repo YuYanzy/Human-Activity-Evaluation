@@ -4,13 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d107e7b4-c719-4480-be1e-37e11c7b9944" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/accelerometer0.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/geolocation0.csv" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plott.py" afterPath="$PROJECT_DIR$/plott.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/store_data.py" afterPath="$PROJECT_DIR$/store_data.py" />
-    </list>
+    <list default="true" id="d107e7b4-c719-4480-be1e-37e11c7b9944" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
