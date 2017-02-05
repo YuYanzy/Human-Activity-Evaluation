@@ -42,7 +42,8 @@ class AnalyseAccelerometer:
 
         return x, y, z, xyz, time, activity
 
-    def plot(self, x, y, z, xyz, time, diff_class):
+    @staticmethod
+    def plot(x, y, z, xyz, time, diff_class):
         """
 
         :param x:
@@ -50,6 +51,7 @@ class AnalyseAccelerometer:
         :param z:
         :param xyz:
         :param time:
+        :param diff_class:
         :return:
         """
 
@@ -82,13 +84,29 @@ class AnalyseAccelerometer:
         :return:
         """
 
-        diff_threshold = 3
-        diff_value = 40
+        activity_threshold = 3
+        hard_activity_threshold = 20
+
+        activity = 40
+        hard_activity = 45
+        low_activity = -40
         # FIXME: fix this
         diff_class = []
 
         for diff in diff_xyz:
-            if diff >= diff_threshold:
+            if diff >= hard_activity_threshold:
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+                diff_class.append(hard_activity)
+
+            elif diff >= activity_threshold:
                 diff_class.append(40)
                 diff_class.append(40)
                 diff_class.append(40)
@@ -112,21 +130,22 @@ class AnalyseAccelerometer:
                 diff_class.append(-40)
                 diff_class.append(-40)
 
-
         return diff_class
 
 if __name__ == '__main__':
-    # ana = AnalyseAccelerometer(filename='data/log/02_03_accelero.csv')
-    ana = AnalyseAccelerometer(filename='data/log/log/accelerometer0.csv')
+    ana = AnalyseAccelerometer(filename='data/log/02_05_accelero.csv')
     x, y, z, xyz, time, activity = ana.readcsv()
-    diff_xyz = ana.diff(x,y,z, xyz)
+    diff_xyz = ana.diff(x, y, z, xyz)
     diff_class = ana.classify(diff_xyz)
-    print (len(diff_class))
-    print (len(xyz))
+
     diff_class.append(1)
     diff_class.append(1)
     diff_class.append(1)
     diff_class.append(1)
     diff_class.append(1)
     diff_class.append(1)
+    diff_class.append(1)
+
+    print(len(diff_class))
+    print(len(xyz))
     ana.plot(x, y, z, xyz, time, diff_class)
