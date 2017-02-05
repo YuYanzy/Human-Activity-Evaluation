@@ -8,7 +8,7 @@ __author__ = 'eirikaa'
 
 def loadcsv():
 
-    filename = 'data/accelerometer0.csv'
+    filename = 'data/log/02_03_accelero.csv'
     rows = []
     x = []
     y = []

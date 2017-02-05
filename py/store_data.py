@@ -76,7 +76,7 @@ def store_GNSS(lat=LAT,lon=LON,speed=SPEED,accuracy=ACCURACY,altitude=ALTITUDE,a
     activity = (request.args.get("activity", activity))
 
     write_csv(lat, lon, speed, accuracy, altitude, heading, time.time(), activity)
-
+    #TODO: add normal time, easier to debug
     return jsonify("bla" + " " + str(lat) + " " + str(lon) + " " + str(speed) + " " + str(accuracy) + " " + str(altitude) + " "
                     + str(heading) + " " + str(time.time()) + " " + str(activity))
 
@@ -99,7 +99,7 @@ def store_accelerometer(x=X,y=Y,z=Z, activity = ACTIVITY):
         with open('data/'+output_accelerometer + str(i) + fileformat, "a+") as f:
             f.write(
                 "bla" + " " + str(x) + " " + str(y) + " " + str(z) + " "+ str((math.sqrt((x)**2+(y)**2+(z)**2))-9.81) + " " + str(time) + " " + str(activity) + " " + "\n")
-    # TODO: trekke fra 9.81 i absoluttverdien, evt sjekk ut low pass og high pass
+    # TODO: add normal time, easier to debug
 
     # ACCELEROMETER
     x = float((request.args.get("x", x)))
