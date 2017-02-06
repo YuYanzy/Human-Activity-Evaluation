@@ -32,7 +32,9 @@ class AnalyseAccelerometer:
         csvfile = open(self.filename, "r")
         csv_reader = csv.reader(csvfile, delimiter=" ")
         for row in csv_reader:
-            if not(float(row[1]) == 0.0 and float(row[2]) == 0.0 and float(row[3]) == 0.0):
+            if row[0] == "ID":
+                pass
+            elif not(float(row[1]) == 0.0 and float(row[2]) == 0.0 and float(row[3]) == 0.0):
                 x.append(float(row[1]))
                 y.append(float(row[2]))
                 z.append(float(row[3]))
@@ -41,6 +43,11 @@ class AnalyseAccelerometer:
                 activity.append(row[6])
 
         return x, y, z, xyz, time, activity
+
+    def calibration(self, xyz):
+
+        return sum(xyz)/len(xyz)
+
 
     @staticmethod
     def plot(x, y, z, xyz, time, diff_class):
@@ -92,7 +99,7 @@ class AnalyseAccelerometer:
         low_activity = -40
         # FIXME: fix this
         diff_class = []
-
+        # TODO: label the diff classes diffenrently
         for diff in diff_xyz:
             if diff >= hard_activity_threshold:
                 diff_class.append(hard_activity)
@@ -132,8 +139,15 @@ class AnalyseAccelerometer:
 
         return diff_class
 
+    def geo_viz(self):
+        # TODO: Folium, geopandas
+        pass
+
 if __name__ == '__main__':
-    ana = AnalyseAccelerometer(filename='data/log/02_05_accelero.csv')
+    # ana = AnalyseAccelerometer(filename='data/log/02_05_accelero.csv')
+    # ana = AnalyseAccelerometer(filename='data/exampledata/tredemolle_accelero.csv')
+    ana = AnalyseAccelerometer(filename='data/calibration/calibration_z_accelero.csv')
+
     x, y, z, xyz, time, activity = ana.readcsv()
     diff_xyz = ana.diff(x, y, z, xyz)
     diff_class = ana.classify(diff_xyz)
@@ -144,8 +158,12 @@ if __name__ == '__main__':
     diff_class.append(1)
     diff_class.append(1)
     diff_class.append(1)
-    diff_class.append(1)
-
+    # diff_class.append(1)
+    # diff_class.append(1)
+    # diff_class.append(1)
+    #TODO: Make diff_class a seperate method
     print(len(diff_class))
     print(len(xyz))
     ana.plot(x, y, z, xyz, time, diff_class)
+
+    print (ana.calibration(xyz))
