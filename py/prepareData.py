@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import matplotlib.pyplot as plt
 import csv
-import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point
 
 __author__ = 'eirikaa'
 
 
-class AnalyseAccelerometer:
+class PrepareData:
     """
 
     """
@@ -22,8 +20,7 @@ class AnalyseAccelerometer:
 
     def readcsv(self):
         """
-
-        :return:
+        Use readcsv2
         """
         x = []
         y = []
@@ -47,10 +44,34 @@ class AnalyseAccelerometer:
 
         return x, y, z, xyz, time, activity
 
-    def readcsv2(self):
-        data = pd.read_csv("data/exampledata/spinning_accelero.csv")
+    def read_accelerometer_data(self):
+
+        data = pd.read_csv(self.filename)
+        id = data["ID"]
         x = data["X"]
-        print (x)
+        y = data["Y"]
+        z = data["Z"]
+        xyz = data["XYZ"]
+        time =data["Time"]
+        activity = data["Activity"]
+        activity2 = data["Activity2"]
+        
+        return x, y, z, xyz, time, activity, activity2
+
+    def read_geodata(self):
+
+        data = pd.read_csv(self.filename)
+        id = data["ID"]
+        lat = data["LAT"]
+        lon = data["LON"]
+        accuracy = data["ACCURACY"]
+        altitude = data["ALTITUDE"]
+        heading = data["HEADING"]
+        time = data["TIME"]
+        activity = data["ACTIVITY"]
+        activity2 =data["ACTIVITY2"]
+
+        return lat, lon, accuracy, altitude, heading, time, activity, activity2, data
 
     def calibration(self, xyz):
 
@@ -128,47 +149,5 @@ class AnalyseAccelerometer:
 
         return diff_class
 
-    def geo_viz(self):
-        # TODO: Folium, geopandas
-
-        # points = pd.read_csv("data/testdata/02_03_geo_utenID.csv", delimiter=";")
-        points = pd.read_csv("data/log/02_06_geo.csv", delimiter=";")
-        points['geometry'] = points.apply(lambda z: Point(z.LAT, z.ID), axis=1)
-        print (points)
-        b = gpd.GeoDataFrame(points)
-
-        b.plot()
-        plt.show()
-
-
-        # TODO: fikse opp i data, mellomrom bør byttes med understrek
-        # TODO: Kutt ut ID intill det er fikset
-
 if __name__ == '__main__':
-    # ana = AnalyseAccelerometer(filename='data/log/02_05_accelero.csv')
-    # ana = AnalyseAccelerometer(filename='data/exampledata/tredemolle_accelero.csv')
-    ana = AnalyseAccelerometer(filename='data/exampledata/spinning_accelero.csv')
-
-    x, y, z, xyz, time, activity = ana.readcsv()
-    ana.readcsv2()
-    # diff_xyz = ana.diff(x, y, z, xyz)
-    # diff_class = ana.classify(diff_xyz)
-    #
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    #TODO: Make diff_class a seperate method
-    # print(len(diff_class))
-    # print(len(xyz))
-    # ana.plot(x, y, z, xyz, time, diff_class)
-    #
-    # print (ana.calibration(xyz))
-
-    # ana.geo_viz()
+    pass
