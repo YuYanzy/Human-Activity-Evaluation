@@ -29,24 +29,48 @@ class Plot:
         plt.axis([min(time), max(time), min(diff_class)-5, max(diff_class)+5])
         plt.show()
 
+    @staticmethod
+    def leaflet(data):
+        import folium
+        import json
+        # map_osm = folium.Map(location=[59.66550801,10.77625199])
+        # map_osm.save("osm.html")
+        buoy_map = folium.Map(
+            [59.66550801,10.77625199],
+            zoom_start=7,
+            tiles='Stamen Terrain'
+        )
+
+        folium.RegularPolygonMarker(
+            [59.66550801,10.77625199],
+            fill_color='#43d9de',
+            radius=12,
+            popup=folium.Popup(max_width=450).add_child(
+                folium.Vega(json.load(open(data)), width=450, height=250))
+        ).add_to(buoy_map)
+
+        buoy_map.save('NOAA_buoys.html')
+
 if __name__ == "__main__":
-    ana = PrepareData(filename='data/exampledata/spinning_accelero.csv')
-    x, y, z, xyz, time, activity, activity2 = ana.read_accelerometer_data()
+    ana = PrepareData(geo_file='', accelero_file='data/exampledata/tredemolle_accelero.csv')
+    x, y, z, xyz, time, activity, activity2, data = ana.read_accelerometer_data()
     diff_xyz = ana.diff(x, y, z, xyz)
-    print(diff_xyz)
     diff_class = ana.classify(diff_xyz)
+
+    print(ana.calibration(xyz))
+    diff_class.append(1)
+    diff_class.append(1)
+    # diff_class.append(1)
+    # diff_class.append(1)
+    # diff_class.append(1)
+    # diff_class.append(1)
+    # diff_class.append(1)
+    # diff_class.append(1)
+    # diff_class.append(1)
+    # # diff_class.append(1)
     print(len(diff_class))
     print(len(xyz))
-    diff_class.append(1)
-    diff_class.append(1)
-    diff_class.append(1)
-    diff_class.append(1)
-    diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    # diff_class.append(1)
-    #TODO: Make diff_class a seperate method
-
+    print(max(xyz))
+    # #TODO: Make diff_class a seperate method
     Plot.plot(x, y, z, xyz, time, diff_class)
+    #

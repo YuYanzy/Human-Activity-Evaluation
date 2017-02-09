@@ -11,12 +11,16 @@ class PrepareData:
     """
 
     """
-    def __init__(self, filename):
+    def __init__(self, geo_file, accelero_file):
         """
 
-        :param filename:
+        :param geo_file:
         """
-        self.filename = filename
+
+        # TODO: fikse hvis ikke begge filer kommer
+        self.geo_file = geo_file
+        self.accelero_file = accelero_file
+
 
     def readcsv(self):
         """
@@ -29,7 +33,7 @@ class PrepareData:
         time = []
         activity = []
 
-        csvfile = open(self.filename, "r")
+        csvfile = open(self.geo_file, "r")
         csv_reader = csv.reader(csvfile, delimiter=",")
         for row in csv_reader:
             if row[0] == "ID":
@@ -46,7 +50,7 @@ class PrepareData:
 
     def read_accelerometer_data(self):
 
-        data = pd.read_csv(self.filename)
+        data = pd.read_csv(self.accelero_file)
         id = data["ID"]
         x = data["X"]
         y = data["Y"]
@@ -56,11 +60,11 @@ class PrepareData:
         activity = data["Activity"]
         activity2 = data["Activity2"]
         
-        return x, y, z, xyz, time, activity, activity2
+        return x, y, z, xyz, time, activity, activity2, data
 
     def read_geodata(self):
 
-        data = pd.read_csv(self.filename)
+        data = pd.read_csv(self.geo_file)
         id = data["ID"]
         lat = data["LAT"]
         lon = data["LON"]
