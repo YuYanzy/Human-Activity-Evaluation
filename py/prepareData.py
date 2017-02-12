@@ -70,6 +70,7 @@ class PrepareData:
         id = data["ID"]
         lat = data["LAT"]
         lon = data["LON"]
+        speed = data["SPEED"]
         accuracy = data["ACCURACY"]
         altitude = data["ALTITUDE"]
         heading = data["HEADING"]
@@ -77,7 +78,7 @@ class PrepareData:
         activity = data["ACTIVITY"]
         activity2 =data["ACTIVITY2"]
 
-        return lat, lon, accuracy, altitude, heading, time, activity, activity2, data
+        return lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data
 
     def calibration(self, xyz):
 
@@ -102,7 +103,7 @@ class PrepareData:
 
     # TODO: implemt another method do differentiate, maybe a difference from average?
 
-    def classify(self, diff_xyz):
+    def classify(self, diff_xyz, xyz):
         """
 
         :param diff_xyz:
@@ -128,6 +129,12 @@ class PrepareData:
             else:
                 for i in range(self.diff_range):
                     diff_class.append(low_activity)
+
+
+        # Remaining values
+        a = len(xyz) - len(diff_class)
+        for i in range(a):
+            diff_class.append(1)
 
         return diff_class
 
