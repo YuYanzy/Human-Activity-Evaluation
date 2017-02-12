@@ -11,16 +11,18 @@ class PrepareData:
     """
 
     """
-    def __init__(self, geo_file, accelero_file):
+    def __init__(self, geo_file, accelero_file, diff_range):
         """
 
         :param geo_file:
+        :param accelero_file:
+        :param diff_range:
         """
 
         # TODO: fikse hvis ikke begge filer kommer
         self.geo_file = geo_file
         self.accelero_file = accelero_file
-
+        self.diff_range = diff_range
 
     def readcsv(self):
         """
@@ -93,11 +95,12 @@ class PrepareData:
         :return:
         """
         diff_xyz = []
-        diff_range = 10
 
-        for value in range(0, len(xyz)-diff_range, diff_range):
-            diff_xyz.append(abs(max(xyz[value:value+diff_range])-min(xyz[value:value+diff_range])))
+        for value in range(0, len(xyz)-self.diff_range, self.diff_range):
+            diff_xyz.append(abs(max(xyz[value:value+self.diff_range])-min(xyz[value:value+self.diff_range])))
         return diff_xyz
+
+    # TODO: implemt another method do differentiate, maybe a difference from average?
 
     def classify(self, diff_xyz):
         """
@@ -106,52 +109,29 @@ class PrepareData:
         :return:
         """
 
-        activity_threshold = 3
-        hard_activity_threshold = 17
+        activity_threshold = 1.5
+        hard_activity_threshold = 16
         activity = 40
         hard_activity = 45
         low_activity = -40
-        # FIXME: fix this
         diff_class = []
         # TODO: label the diff classes diffenrently
         for diff in diff_xyz:
             if diff >= hard_activity_threshold:
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
-                diff_class.append(hard_activity)
+                for i in range(self.diff_range):
+                    diff_class.append(hard_activity)
 
             elif diff >= activity_threshold:
-                diff_class.append(activity)
-                diff_class.append(activity)
-                diff_class.append(activity)
-                diff_class.append(activity)
-                diff_class.append(activity)
-                diff_class.append(activity)
-                diff_class.append(activity)
-                diff_class.append(activity)
-                diff_class.append(activity)
-                diff_class.append(activity)
+                for i in range(self.diff_range):
+                    diff_class.append(activity)
 
             else:
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
-                diff_class.append(low_activity)
+                for i in range(self.diff_range):
+                    diff_class.append(low_activity)
 
         return diff_class
+
+    # TODO: Some interpolation is nesecarry
 
 if __name__ == '__main__':
     pass

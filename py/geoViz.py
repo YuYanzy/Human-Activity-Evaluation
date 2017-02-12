@@ -34,14 +34,38 @@ def leaflet(data):
 
     buoy_map.save('NOAA_buoys.html')
 
+def leaflet2():
+    file = "data/geo/test.geojson"
+
+    map = folium.Map(location=[59.66, 10.77],
+                      tiles="Stamen Terrain", zoom_start=7)
+
+    map.add_child(folium.GeoJson(data=open(file),
+                                 name="geojson",
+                                 ).add_child(
+        folium.Popup("simples tring")
+    )).add_to(map)
+    # folium.GeoJson(data=open(file),
+    #                name="geojson",
+    #                ).add_child(folium.Popup("Simple popup"))
+
+    map.save("test.html")
+
+
 if __name__ == "__main__":
 
-    ana = PrepareData(geo_file="data/log/02_06_geo.csv", accelero_file="data/log/02_06_accelero.csv")
+    ana = PrepareData(geo_file="data/log/02_12_2_geo.csv", accelero_file="data/log/02_12_02_accelero.csv", diff_range=5)
     lat, lon, accuracy, altitude, heading, time, activity, activity2, data_geo = ana.read_geodata()
-    # geo_viz(data)
+    geo_viz(data_geo)
 
     x, y, z, xyz, time, activity, activity2, data_acc= ana.read_accelerometer_data()
     bar = vincent.Line(data_acc['XYZ'])
     bar.to_json('vega.json')
 
-    leaflet('vega.json')
+    # leaflet('vega.json')
+    # leaflet2()
+
+    # print (data_acc["XYZ"][3:5])
+    #
+    # for i in range(len(data_acc["XYZ"])-10):
+    #     vincent.Line(data_acc['XYZ'][i:i+10]).to_json("data/vega/vega"+str(i)+".json")
