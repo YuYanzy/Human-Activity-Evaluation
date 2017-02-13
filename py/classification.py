@@ -3,6 +3,8 @@
 from prepareData import PrepareData
 import pandas as pd
 import csv
+import requests
+import json
 
 __author__ = 'eirikaa'
 
@@ -12,30 +14,21 @@ class Process:
         pass
 
     @staticmethod
-    def is_subway(file):
-        user_data = []
+    def read_API_tog(lat, lon):
 
+        req = requests.get('http://188.166.168.99/tog/?lon=' + str(lon) + '&lat=' + str(lat))
+        req = req.content.decode(req.apparent_encoding)
+        req = json.loads(req)
+        return req
 
-        for i in range(len(file)):
-            lon = file[i][2]
-            lat = file[i][1]
-            speed = float(file[i][4]) * 3.6  # km/h
-            # print (read_API(lat, lon))
-            user_data.append(read_API_tog(lat, lon))
-            if (user_data[i][1] == True) or (user_data[i - 1][1] == True) or (user_data[i - 2][1] == True) or (
-                user_data[i - 3][1] == True):
-                print('woha', user_data[i])
-                if speed >= 20:
-                    csv_writer.writerow([i, lat, lon, speed, 'subway', 'driving'])
-                else:
-                    csv_writer.writerow([i, lat, lon, speed, 'subway', 'not_driving'])
+    @staticmethod
+    def read_API_buss(lat, lon):
 
-            else:
-                if speed >= 20:
-                    print('booo', user_data[i])
-                    csv_writer.writerow([i, lat, lon, speed, 'not_subway', 'driving'])
-                else:
-                    csv_writer.writerow([i, lat, lon, speed, 'not_subway', 'not_driving'])
+        req = requests.get('http://188.166.168.99/buss/?lon=' + str(lon) + '&lat=' + str(lat))
+        req = req.content.decode(req.apparent_encoding)
+        req = json.loads(req)
+        return req
+
 
 
     @staticmethod
@@ -49,22 +42,28 @@ class Process:
 
             # speed.to_csv(path_or_buf="data/processed/pandacsv.csv", index=True)
         # TODO: learn Pandas
+
     @staticmethod
     def test2(data_geo):
-        kmh = 1.609344
+        kmh = 3.6
         csv_out = "data/processed/output.csv"
         csvfile_output = open(csv_out, 'w')
         csv_writer = csv.writer(csvfile_output)
-        csv_writer.writerow(['Index', 'lat', 'lon', 'speed', 'subway', 'driving'])
+        csv_writer.writerow(['ID', 'LAT', 'LON', 'SPEED', 'ACTIVITY',])
 
-        for i, speed in enumerate (data_geo["SPEED"]):
-            if speed * kmh >= 10:
+
+        for i in range (len(data_geo)):
+            print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
+            if (Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])[1]) == True:
+                csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Train"])
+            elif  data_geo["SPEED"][i]* kmh >= 10:
                 csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Driving"])
-            elif speed * kmh < 1.5:
+            elif data_geo["SPEED"][i] * kmh < 1.5:
                 csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Stationary"])
             else:
                 csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Walking"])
         csvfile_output.close()
+
     def diff(self):
         # TODO: move diff and classify here?
         pass

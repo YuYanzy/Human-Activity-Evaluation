@@ -31,7 +31,7 @@ class Plot:
         plt.show()
 
 if __name__ == "__main__":
-    ana = PrepareData(geo_file='', accelero_file='data/log/02_12_2_accelero.csv', diff_range=2)
+    ana = PrepareData(geo_file='', accelero_file='data/log/02_06_accelero.csv', diff_range=10)
     x, y, z, xyz, time, activity, activity2, data = ana.read_accelerometer_data()
     diff_xyz = ana.diff(x, y, z, xyz)
     diff_class = ana.classify(diff_xyz, xyz)
