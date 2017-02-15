@@ -31,11 +31,13 @@ class Plot:
         plt.show()
 
 if __name__ == "__main__":
-    ana = PrepareData(geo_file='', accelero_file='data/log/02_06_accelero.csv', diff_range=10)
+    ana = PrepareData(geo_file='', accelero_file='data/exampledata/tredemolle_accelero.csv', diff_range=15)
     x, y, z, xyz, time, activity, activity2, data = ana.read_accelerometer_data()
-    diff_xyz = ana.diff(x, y, z, xyz)
+    # diff_xyz = ana.diff_maxmin(x, y, z, xyz)
+    diff_xyz = ana.diff_avg(x, y, z, xyz)
     diff_class = ana.classify(diff_xyz, xyz)
 
+    print (diff_class)
     print(ana.calibration(xyz))
     print (len(diff_class))
     print (len(xyz))

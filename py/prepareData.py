@@ -86,7 +86,7 @@ class PrepareData:
 
 
 
-    def diff(self, x, y, z, xyz):
+    def diff_maxmin(self, x, y, z, xyz):
         """
 
         :param x:
@@ -101,7 +101,21 @@ class PrepareData:
             diff_xyz.append(abs(max(xyz[value:value+self.diff_range])-min(xyz[value:value+self.diff_range])))
         return diff_xyz
 
-    # TODO: implemt another method do differentiate, maybe a difference from average?
+
+    def diff_avg(self, x, y, z, xyz):
+        """
+
+        :param x:
+        :param y:
+        :param z:
+        :param xyz:
+        :return:
+        """
+        diff_xyz = []
+
+        for value in range(0, len(xyz) - self.diff_range, self.diff_range):
+            diff_xyz.append((max(abs(xyz[value:value + self.diff_range])))- ((sum(xyz[value:value + self.diff_range]))/self.diff_range))
+        return diff_xyz
 
     def classify(self, diff_xyz, xyz):
         """
@@ -110,13 +124,14 @@ class PrepareData:
         :return:
         """
 
-        activity_threshold = 1.5
-        hard_activity_threshold = 16
-        activity = 40
-        hard_activity = 45
-        low_activity = -40
+        activity_threshold = 2.5
+        hard_activity_threshold = 10
+        activity = 25
+        hard_activity = 30
+        low_activity = -15
         diff_class = []
         # TODO: label the diff classes diffenrently
+
         for diff in diff_xyz:
             if diff >= hard_activity_threshold:
                 for i in range(self.diff_range):

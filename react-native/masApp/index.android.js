@@ -73,8 +73,9 @@ export default class masApp extends Component {
 
             },
             (error) => alert(JSON.stringify(error)),
-            {enableHighAccuracy: false, timeout: 20000, maximumAge: 0, setInterval: 300}
+            {enableHighAccuracy: false, timeout: 20000, maximumAge: 0, distanceFilter: 4}
             //FIXME: setintervall?
+			//FIXME: distancefilter
         );
 
         SensorManager.startAccelerometer(300); // Start the accelerometer with a minimum delay of 100 ms between events

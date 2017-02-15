@@ -69,14 +69,10 @@ class Process:
         pass
 
 if __name__ == "__main__":
-    ana = PrepareData(geo_file='data/log/02_12_2_geo.csv', accelero_file='data/log/02_12_2_accelero.csv', diff_range=2)
+    ana = PrepareData(geo_file='data/log/02_12_2_geo.csv', accelero_file='data/log/02_12_2_accelero.csv', diff_range=10)
     x, y, z, xyz, time, activity, activity2, data_accelero = ana.read_accelerometer_data()
     lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data_geo = ana.read_geodata()
-    diff_xyz = ana.diff(x, y, z, xyz)
+    diff_xyz = ana.diff_maxmin(x, y, z, xyz)
     diff_class = ana.classify(diff_xyz, xyz)
 
     Process.test2(data_geo)
-    print (data_geo["SPEED"][1])
-    print (type(data_geo))
-    # print(data_geo["SPEED" > 10])
-    # print (speed)

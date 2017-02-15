@@ -54,7 +54,7 @@ def leaflet2():
 
 if __name__ == "__main__":
 
-    ana = PrepareData(geo_file="data/log/02_12_2_geo.csv", accelero_file="data/log/02_12_2_accelero.csv", diff_range=5)
+    ana = PrepareData(geo_file="data/log/02_14_geo.csv", accelero_file="data/log/02_12_2_accelero.csv", diff_range=5)
     lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data_geo = ana.read_geodata()
     geo_viz(data_geo)
 
