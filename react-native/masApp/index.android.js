@@ -73,9 +73,9 @@ export default class masApp extends Component {
 
             },
             (error) => alert(JSON.stringify(error)),
-            {enableHighAccuracy: false, timeout: 20000, maximumAge: 0, distanceFilter: 4}
+            {enableHighAccuracy: true, timeout: 0, maximumAge: 1000, distanceFilter:4}
             //FIXME: setintervall?
-			//FIXME: distancefilter
+            //FIXME: distancefilter
         );
 
         SensorManager.startAccelerometer(300); // Start the accelerometer with a minimum delay of 100 ms between events
@@ -84,12 +84,15 @@ export default class masApp extends Component {
             var y = data.y;
             var z = data.z;
 
+
             this.setState({
                 x: x,
                 y: y,
                 z: z
             });
+            this.fetchAccelerometer(this.state.x, this.state.y, this.state.z, this.state.activity);
         }.bind(this));
+
 
 /*
         SensorManager.startGyroscope(300);
@@ -134,7 +137,7 @@ export default class masApp extends Component {
     fetchGeolocation(lat, lon, speed, accuracy, altitude, heading, activity) {
 
 
-        var URL = "http://188.166.168.99:5000/storeGNSS?lat=" + lat + "&lon=" + lon + "&speed=" + speed +
+        var URL = "http://138.68.86.63/storeGNSS?lat=" + lat + "&lon=" + lon + "&speed=" + speed +
             "&accuracy=" + accuracy + "&altitude=" + altitude +  "&heading=" + heading + "&activity=" + activity;
 
         fetch(URL)
@@ -143,7 +146,7 @@ export default class masApp extends Component {
             .then((responseData) => {
             })
             .catch((error) => {
-                alert("Something wrong with fetch gnss")
+                console.log("Something wrong with fetch gnss");
             })
             .done();
     }
@@ -151,7 +154,7 @@ export default class masApp extends Component {
     fetchAccelerometer(x, y, z, activity) {
 
 
-        var URL = "http://188.166.168.99.5000:5000/storeACCELEROMETER?&x=" + x + "&y=" + y +
+        var URL = "http://138.68.86.63/storeACCELEROMETER?&x=" + x + "&y=" + y +
             "&z=" + z + "&activity=" + activity;
 
         fetch(URL)
@@ -160,7 +163,7 @@ export default class masApp extends Component {
             .then((responseData) => {
             })
             .catch((error) => {
-                alert("Something wrong with fetch accelerometer")
+                console.log("Something wrong with fetch accelerometer");
             })
             .done();
     }
@@ -184,20 +187,19 @@ export default class masApp extends Component {
     render(){
         // TODO: if prevLocation =! New location then this.fetchGeolocation
         // this.fetchGeolocation(this.state.lat,this.state.lon,this.state.speed,this.state.accuracy, this.state.altitude, this.state.heading, this.state.activity);
-        this.fetchAccelerometer(this.state.x, this.state.y, this.state.z, this.state.activity);
         return (
             <View>
               <Text>
-                <Text style={styles.title}>Lat: </Text> {this.state.lat}
-                <Text style={styles.title}>Lon: </Text> {this.state.lon}
-                <Text style={styles.title}>Speed: </Text> {this.state.speed}
-                <Text style={styles.title}>Accuracy: </Text> {this.state.accuracy}
-                <Text style={styles.title}>Altitude: </Text> {this.state.altitude}
-                <Text style={styles.title}>X: </Text> {this.state.x}
-                <Text style={styles.title}>Y: </Text> {this.state.y}
-                <Text style={styles.title}>Z: </Text> {this.state.z}
+                <Text style={styles.title}>Lat: </Text> {this.state.lat} <Text>{'\n'}</Text>
+                <Text style={styles.title}>Lon: </Text> {this.state.lon} <Text>{'\n'}</Text>
+                <Text style={styles.title}>Speed: </Text> {this.state.speed} <Text>{'\n'}</Text>
+                <Text style={styles.title}>Accuracy: </Text> {this.state.accuracy} <Text>{'\n'}</Text>
+                <Text style={styles.title}>Altitude: </Text> {this.state.altitude} <Text>{'\n'}</Text>
+                <Text style={styles.title}>X: </Text> {this.state.x} <Text>{'\n'}</Text>
+                <Text style={styles.title}>Y: </Text> {this.state.y} <Text>{'\n'}</Text>
+                <Text style={styles.title}>Z: </Text> {this.state.z} <Text>{'\n'}</Text>
 
-                <Text style={styles.title}>Activity: </Text> {this.state.activity}
+                <Text style={styles.title}>Activity: </Text> {this.state.activity} <Text>{'\n'}</Text>
               </Text>
 
             <TextInput
