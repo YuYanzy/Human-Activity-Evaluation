@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from prepareData import PrepareData
-import pandas as pd
 import matplotlib.pyplot as plt
+from classification import Classification
 
 __author__ = 'eirikaa'
 
@@ -45,16 +45,17 @@ class Plot:
 
 
 if __name__ == "__main__":
-    ana = PrepareData(geo_file='data/log/02_14_geo.csv', accelero_file='data/log/02_14_accelero.csv', diff_range=15)
-    x, y, z, xyz, time, activity, activity2, data = ana.read_accelerometer_data()
-    lat, lon, speed, accuracy, altitude, heading, time_geo, activity, activity2, data_geo = ana.read_geodata()
+    prep = PrepareData(geo_file='data/log/02_05_geo.csv', accelero_file='data/log/02_05_accelero.csv')
+    classification = Classification(diff_range=10)
+    x, y, z, xyz, time, activity, activity2, data = prep.read_accelerometer_data()
+    lat, lon, speed, accuracy, altitude, heading, time_geo, activity, activity2, data_geo = prep.read_geodata()
 
     # diff_xyz = ana.diff_maxmin(x, y, z, xyz)
-    diff_xyz = ana.diff_avg(x, y, z, xyz)
-    diff_class = ana.classify(diff_xyz, xyz, time)
+    diff_xyz = classification.diff_avg(x, y, z, xyz)
+    diff_class = classification.classify(diff_xyz, xyz, time)
 
     print (diff_class)
-    print(ana.calibration(xyz))
+    print(prep.calibration(xyz))
     print (len(diff_class))
     print (len(xyz))
 
@@ -65,4 +66,4 @@ if __name__ == "__main__":
     for i in diff_class:
        a.append(i[0])
     print (a)
-    Plot.plot2(x, y, z, xyz, time, a, speed, time_geo)
+    Plot.plot(x, y, z, xyz, time, a, speed, time_geo)
