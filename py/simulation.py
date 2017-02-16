@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from prepareData import PrepareData
+from classification import Classification
 __author__ = 'eirikaa'
 
 
@@ -10,40 +11,62 @@ class Simulation:
 
     @staticmethod
     def sim():
-        ana = PrepareData(geo_file='data/log/02_05_geo.csv', accelero_file='data/log/02_05_accelero.csv',
-                          diff_range=10)
-        x, y, z, xyz, time_accelero, activity, activity2, data_accelero = ana.read_accelerometer_data()
-        lat, lon, speed, accuracy, altitude, heading, time_geo, activity, activity2, data_geo = ana.read_geodata()
-        diff_xyz = ana.diff_avg(x, y, z, xyz)
-        diff_class = ana.classify(diff_xyz, xyz, time_accelero)
-        print(len(diff_class))
-        print(diff_class)
+        prep = PrepareData(geo_file='data/log/02_12_2_geo.csv', accelero_file='data/log/02_12_2_accelero.csv')
+        classification = Classification(diff_range=15)
+        x, y, z, xyz, time_accelero, activity, activity2, data_accelero = prep.read_accelerometer_data()
+        lat, lon, speed, accuracy, altitude, heading, time_geo, activity, activity2, data_geo = prep.read_geodata()
+        diff_xyz = classification.diff_avg(x, y, z, xyz)
+        diff_class = classification.classify(diff_xyz, xyz, time_accelero)
 
-        # for i in range (len(data_geo)):
-        #     print (min(diff_class[i][1], key=lambda x:abs(x-data_geo['TIME'])))
-        #     print (diff_class[i][0])
+        tall = 1000
         b = []
-        for i in range(len(data_geo)):
+        time_geo = list(time_geo)
+        print(min(time_geo, key=lambda x: abs(x - diff_class[tall][1])))
+        # print(type(list(time_geo)))
+        for i in range(len(data_accelero)):
 
-            a = (min(data_geo['TIME'], key=lambda x: abs(x - diff_class[i][1])))
-            # b.append([a, diff_class[i][0], diff_class[i][1]])
-            b.append(diff_class[i][0])
-            # b.append()
+            # a = (min(data_geo['TIME'], key=lambda x: abs(x - diff_class[i][1])))
+            a= min(time_geo, key=lambda x: abs(x-diff_class[i][1]))
+            b.append([diff_class[i][0],a])
+        counter = 0
+
+        temp_list = []
+        new_list = []
+        diff_list = []
+        for j in range(1,len(b)):
+            temp_time = b[j][1]
+            temp_diff = b[j][0]
+            if temp_time == b[j-1][1]:
+                temp_list.append(b[j])
+                # TODO: is this one nesecary?
+                if temp_time != b[j-2][1]:
+                    new_list.append(temp_list[0][1])
+                    diff_list.append(temp_list[0][0])
+                    # TODO: add the diff class with most similar values
+                    for i in diff_list:
+                        print (i)
+            else:
+                temp_list = []
 
 
-            # print(diff_class[i][1])
-            # print(j)
-        # print (data_geo['TIME'])
-        # print(b[1][1])
-        # print(len(b[:][1]))
-        # print(len(data_geo))
-        data_geo['Diff class'] = b
-        print (data_geo)
+        print (len(new_list))
+        print (len(data_geo))
+
+
+            # if temp_time != b[j+1][1] or temp_diff != b[j+1][0]:
+            #     counter += 1
+            #     print (b[j])
+            #     print (counter)
+
+
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        data_geo['Diff class'] = diff_list
         data_geo.to_csv("data/processed/test.csv")
-        # print (b[0][1])
-        # for i,j  in enumerate (b):
-        #     print (j[i][1])
-        # print (data_geo)
+
 if __name__ == "__main__":
 
     Simulation.sim()

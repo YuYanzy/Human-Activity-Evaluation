@@ -135,7 +135,7 @@ class Classification:
         # TODO: learn Pandas
 
     @staticmethod
-    def test2(data_geo, diff_class):
+    def write_csv(data_geo, diff_class):
         kmh = 3.6
         csv_out = "data/processed/output.csv"
         csvfile_output = open(csv_out, 'w')
@@ -168,6 +168,6 @@ if __name__ == "__main__":
     diff_xyz = classification.diff_maxmin(x, y, z, xyz)
     diff_class = classification.classify(diff_xyz, xyz, time)
     print (diff_class)
-    Classification.test2(data_geo, diff_class)
+    Classification.write_csv(data_geo, diff_class)
 
     # TODO: make geojson lines
