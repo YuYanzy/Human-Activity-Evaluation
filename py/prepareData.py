@@ -19,7 +19,6 @@ class PrepareData:
         :param diff_range:
         """
 
-        # TODO: fikse hvis ikke begge filer kommer
         self.geo_file = geo_file
         self.accelero_file = accelero_file
         self.diff_range = diff_range
@@ -85,7 +84,6 @@ class PrepareData:
         return sum(xyz)/len(xyz)
 
 
-
     def diff_maxmin(self, x, y, z, xyz):
         """
 
@@ -98,7 +96,7 @@ class PrepareData:
         diff_xyz = []
 
         for value in range(0, len(xyz)-self.diff_range, self.diff_range):
-            diff_xyz.append(abs(max(xyz[value:value+self.diff_range])-min(xyz[value:value+self.diff_range])))
+            diff_xyz.append((abs(max(xyz[value:value+self.diff_range])-min(xyz[value:value+self.diff_range]))))
         return diff_xyz
 
 
@@ -117,7 +115,27 @@ class PrepareData:
             diff_xyz.append((max(abs(xyz[value:value + self.diff_range])))- ((sum(xyz[value:value + self.diff_range]))/self.diff_range))
         return diff_xyz
 
-    def classify(self, diff_xyz, xyz):
+    def diff_avg2(self, x, y, z, xyz, time):
+        """
+
+        :param x:
+        :param y:
+        :param z:
+        :param xyz:
+        :return:
+        """
+        diff_xyz = []
+        diff_xyz_time = []
+        i = -1
+        for value in range(0, len(xyz) - self.diff_range, self.diff_range):
+            for j in range(self.diff_range):
+                i += 1
+                print (i)
+            diff_xyz_time.append([((max(abs(xyz[value:value + self.diff_range])))- ((sum(xyz[value:value + self.diff_range]))/self.diff_range)),time[i]])
+
+        return diff_xyz_time, diff_xyz
+
+    def classify(self, diff_xyz, xyz, time):
         """
 
         :param diff_xyz:
@@ -132,24 +150,29 @@ class PrepareData:
         diff_class = []
         # TODO: label the diff classes diffenrently
 
+        j = -1
         for diff in diff_xyz:
             if diff >= hard_activity_threshold:
                 for i in range(self.diff_range):
-                    diff_class.append(hard_activity)
+                    j +=1
+                    # diff_class.append(hard_activity)
+                    diff_class.append([hard_activity, time[j]])
 
             elif diff >= activity_threshold:
                 for i in range(self.diff_range):
-                    diff_class.append(activity)
-
+                    j += 1
+                    # diff_class.append(activity)
+                    diff_class.append([activity, time[j]])
             else:
                 for i in range(self.diff_range):
-                    diff_class.append(low_activity)
-
+                    j += 1
+                    # diff_class.append(low_activity)
+                    diff_class.append([low_activity, time[j]])
 
         # Remaining values
         a = len(xyz) - len(diff_class)
         for i in range(a):
-            diff_class.append(1)
+            diff_class.append([1,0])
 
         return diff_class
 

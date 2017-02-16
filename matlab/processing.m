@@ -19,11 +19,11 @@ mag = sqrt(sum(x.^2 + y.^2 + z.^2, 2));
 
 % Accounting for gravity.
 
-magNoG = mag - mean(mag);
+magNoG2 = mag - mean(mag);
 
 %Why is these different??
-magNoG2 = mag;
-magNoG3 = xyz;
+magNoG3 = mag;
+magNoG = xyz;
 
 % Plot magnitude.
 plot(time, magNoG, 'r');

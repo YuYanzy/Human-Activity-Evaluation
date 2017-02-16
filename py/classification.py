@@ -44,16 +44,16 @@ class Process:
         # TODO: learn Pandas
 
     @staticmethod
-    def test2(data_geo):
+    def test2(data_geo, diff_class):
         kmh = 3.6
         csv_out = "data/processed/output.csv"
         csvfile_output = open(csv_out, 'w')
         csv_writer = csv.writer(csvfile_output)
         csv_writer.writerow(['ID', 'LAT', 'LON', 'SPEED', 'ACTIVITY',])
 
-
         for i in range (len(data_geo)):
-            print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
+            # print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
+
             if (Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])[1]) == True:
                 csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Train"])
             elif  data_geo["SPEED"][i]* kmh >= 10:
@@ -73,6 +73,8 @@ if __name__ == "__main__":
     x, y, z, xyz, time, activity, activity2, data_accelero = ana.read_accelerometer_data()
     lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data_geo = ana.read_geodata()
     diff_xyz = ana.diff_maxmin(x, y, z, xyz)
-    diff_class = ana.classify(diff_xyz, xyz)
+    diff_class = ana.classify(diff_xyz, xyz, time)
+    print (diff_class)
+    Process.test2(data_geo, diff_class)
 
-    Process.test2(data_geo)
+    # TODO: make geojson lines
