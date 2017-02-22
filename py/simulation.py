@@ -2,6 +2,7 @@
 
 from prepareData import PrepareData
 from classification import Classification
+
 __author__ = 'eirikaa'
 
 
@@ -11,7 +12,7 @@ class Simulation:
 
     @staticmethod
     def sim():
-        prep = PrepareData(geo_file='data/log/02_12_2_geo.csv', accelero_file='data/log/02_12_2_accelero.csv')
+        prep = PrepareData(geo_file='data/log/02_18_geo.csv', accelero_file='data/log/02_18_accelero.csv')
         classification = Classification(diff_range=15)
         x, y, z, xyz, time_accelero, activity, activity2, data_accelero = prep.read_accelerometer_data()
         lat, lon, speed, accuracy, altitude, heading, time_geo, activity, activity2, data_geo = prep.read_geodata()
@@ -28,9 +29,11 @@ class Simulation:
             # a = (min(data_geo['TIME'], key=lambda x: abs(x - diff_class[i][1])))
             a= min(time_geo, key=lambda x: abs(x-diff_class[i][1]))
             b.append([diff_class[i][0],a])
-        counter = 0
 
+
+        # TODO: fix this algorithm
         temp_list = []
+        temp_diff_list = []
         new_list = []
         diff_list = []
         for j in range(1,len(b)):
@@ -38,19 +41,27 @@ class Simulation:
             temp_diff = b[j][0]
             if temp_time == b[j-1][1]:
                 temp_list.append(b[j])
+                temp_diff_list.append(b[j][0])
                 # TODO: is this one nesecary?
                 if temp_time != b[j-2][1]:
                     new_list.append(temp_list[0][1])
-                    diff_list.append(temp_list[0][0])
-                    # TODO: add the diff class with most similar values
-                    for i in diff_list:
-                        print (i)
+                    # diff_list.append(temp_list[0][0])
+                    # print (temp_diff_list)
+
+                    # print(temp_diff_list)
+                    diff_list.append(max(set(temp_diff_list), key=temp_diff_list.count))
             else:
+                # print(temp_diff_list)
+                # print(max(set(temp_diff_list), key=temp_diff_list.count))
                 temp_list = []
+                # temp_list.append(b[j])
+                temp_diff_list = []
+                # temp_diff_list.append(b[j][0])
 
 
         print (len(new_list))
         print (len(data_geo))
+
 
 
             # if temp_time != b[j+1][1] or temp_diff != b[j+1][0]:
@@ -64,6 +75,28 @@ class Simulation:
         diff_list.append(1)
         diff_list.append(1)
         diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        diff_list.append(1)
+        # diff_list.append(1)
+        # diff_list.append(1)
+        # diff_list.append(1)
+        # diff_list.append(1)
+        # diff_list.append(1)
+
+
+        print(len(diff_list))
+
         data_geo['Diff class'] = diff_list
         data_geo.to_csv("data/processed/test.csv")
 

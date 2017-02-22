@@ -60,6 +60,9 @@ class Classification:
             (sum(xyz[value:value + self.diff_range])) / self.diff_range))
         return diff_xyz
 
+    # TODO: implement method with number of peaks or similar, or summerize the magnitude
+    # TODO: implement a method where sum of variance is used, see article 
+
     def diff_avg2(self, x, y, z, xyz, time):
         """
 

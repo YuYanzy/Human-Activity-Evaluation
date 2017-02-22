@@ -97,8 +97,7 @@ def store_accelerometer(x=X,y=Y,z=Z, activity = ACTIVITY):
         #         i += 1
 
         with open('data/'+output_accelerometer + str(i) + fileformat, "a+") as f:
-            f.write(
-                "bla" + ", " + str(x) + ", " + str(y) + ", " + str(z) + ", "+ str((math.sqrt((x)**2+(y)**2+(z)**2))-9.81) + ", " + str(time) + ", " + str(activity) + " " + "\n")
+            f.write("bla" + ", " + str(x) + ", " + str(y) + ", " + str(z) + ", "+ str((math.sqrt((x)**2+(y)**2+(z)**2))-9.81) + ", " + str(time) + ", " + str(activity) + " " + "\n")
 
     # ACCELEROMETER
     x = float((request.args.get("x", x)))

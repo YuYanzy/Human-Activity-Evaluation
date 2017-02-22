@@ -45,7 +45,7 @@ class Plot:
 
 
 if __name__ == "__main__":
-    prep = PrepareData(geo_file='data/log/02_05_geo.csv', accelero_file='data/log/02_05_accelero.csv')
+    prep = PrepareData(geo_file='data/log/02_18_geo.csv', accelero_file='data/log/02_18_accelero.csv')
     classification = Classification(diff_range=10)
     x, y, z, xyz, time, activity, activity2, data = prep.read_accelerometer_data()
     lat, lon, speed, accuracy, altitude, heading, time_geo, activity, activity2, data_geo = prep.read_geodata()
