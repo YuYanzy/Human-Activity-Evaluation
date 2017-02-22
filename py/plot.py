@@ -3,6 +3,7 @@
 from prepareData import PrepareData
 import matplotlib.pyplot as plt
 from classification import Classification
+import datetime
 
 __author__ = 'eirikaa'
 
@@ -25,9 +26,16 @@ class Plot:
 
         # Plot XYZ data
         # plt.ion()
-        plt.plot(time, xyz, "r", label="xyz")
-        plt.plot(time, diff_class, "bo", label="movement")
-        plt.axis([min(time), max(time), min(diff_class)-5, max(diff_class)+5])
+        readable_time = []
+        for utc in time:
+            readable_time.append(datetime.datetime.fromtimestamp(utc))
+        print (readable_time)
+        print (len(readable_time))
+        print(len(xyz))
+        plt.plot(readable_time, xyz, "r", label="xyz")
+        plt.plot(readable_time, diff_class, "bo", label="movement")
+        plt.gcf().autofmt_xdate()
+        plt.axis([min(readable_time), max(readable_time), min(diff_class)-5, max(diff_class)+5])
         plt.show()
 
 
@@ -52,7 +60,7 @@ if __name__ == "__main__":
 
     # diff_xyz = ana.diff_maxmin(x, y, z, xyz)
     diff_xyz = classification.diff_avg(x, y, z, xyz)
-    diff_class = classification.classify(diff_xyz, xyz, time)
+    diff_class = classification.differentiate(diff_xyz, xyz, time)
 
     print (diff_class)
     print(prep.calibration(xyz))
