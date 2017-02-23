@@ -8,14 +8,14 @@ __author__ = 'eirikaa'
 
 class PrepareData:
     """
-
+        This class will prepare data from the CSV files that correspons to
+        accelerometer and geolocation data.
     """
     def __init__(self, geo_file, accelero_file):
         """
 
-        :param geo_file:
-        :param accelero_file:
-        :param diff_range:
+        :param geo_file: CSV file, geolocation data.
+        :param accelero_file: CSV file, accelerometer data.
         """
 
         self.geo_file = geo_file
@@ -23,7 +23,7 @@ class PrepareData:
 
     def readcsv(self):
         """
-        Use readcsv2
+        This method is inactive, use read_accelerometer_data and read_geodata.
         """
         x = []
         y = []
@@ -48,6 +48,9 @@ class PrepareData:
         return x, y, z, xyz, time, activity
 
     def read_accelerometer_data(self):
+        """
+        :return: x,y,z, accelerometer time tags, activity, accelerometer data.
+        """
 
         data = pd.read_csv(self.accelero_file)
         id = data["ID"]
@@ -62,6 +65,10 @@ class PrepareData:
         return x, y, z, xyz, time, activity, activity2, data
 
     def read_geodata(self):
+        """
+        :return: lat, lon, speed, accuracy, altitude, heading,
+        geolocation time tags, activity, geolocation data.
+        """
 
         data = pd.read_csv(self.geo_file)
         id = data["ID"]
@@ -78,7 +85,11 @@ class PrepareData:
         return lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data
 
     def calibration(self, xyz):
+        """
 
+        :param xyz: sqrt(x**2 + y**2 + z**2)
+        :return: average of xyz
+        """
         return sum(xyz)/len(xyz)
 
 

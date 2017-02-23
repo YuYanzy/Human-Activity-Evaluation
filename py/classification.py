@@ -10,11 +10,24 @@ __author__ = 'eirikaa'
 
 
 class Classification:
+    """
+    This class will classify and differentiate data
+    """
     def __init__(self, diff_range):
+        """
+
+        :param diff_range: The number of elements in the data lists which will make up epochs
+        """
         self.diff_range = diff_range
 
     @staticmethod
-    def read_API_tog(lat, lon):
+    def read_api_tog(lat, lon):
+        """
+
+        :param lat:
+        :param lon:
+        :return:
+        """
 
         req = requests.get('http://188.166.168.99/tog/?lon=' + str(lon) + '&lat=' + str(lat))
         req = req.content.decode(req.apparent_encoding)
@@ -22,8 +35,13 @@ class Classification:
         return req
 
     @staticmethod
-    def read_API_buss(lat, lon):
+    def read_api_buss(lat, lon):
+        """
 
+        :param lat:
+        :param lon:
+        :return:
+        """
         req = requests.get('http://188.166.168.99/buss/?lon=' + str(lon) + '&lat=' + str(lat))
         req = req.content.decode(req.apparent_encoding)
         req = json.loads(req)
@@ -70,6 +88,7 @@ class Classification:
         :param y:
         :param z:
         :param xyz:
+        :param time:
         :return:
         """
         diff_xyz = []
@@ -88,6 +107,8 @@ class Classification:
         """
 
         :param diff_xyz:
+        :param xyz:
+        :param time:
         :return:
         """
 
@@ -126,7 +147,7 @@ class Classification:
         return diff_class
 
     @staticmethod
-    def classify_geo_data(diff_class, time_geo):
+    def classify_geo_data(diff_class, time_geo, data_accelero):
         diff_class_geo_time = []
         time_geo = list(time_geo)
 
@@ -186,12 +207,12 @@ class Classification:
         csv_out = "data/processed/output.csv"
         csvfile_output = open(csv_out, 'w')
         csv_writer = csv.writer(csvfile_output)
-        csv_writer.writerow(['ID', 'LAT', 'LON', 'SPEED', 'ACTIVITY',])
+        csv_writer.writerow(['ID', 'LAT', 'LON', 'SPEED', 'ACTIVITY', ])
 
         for i in range(len(data_geo)):
             # print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
 
-            if (Classification.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])[1]):
+            if Classification.read_api_tog(data_geo["LAT"][i], data_geo["LON"][i])[1]:
                 csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Train"])
             elif data_geo["SPEED"][i] * kmh >= 10:
                 csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Driving"])
@@ -201,9 +222,6 @@ class Classification:
                 csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Walking"])
         csvfile_output.close()
 
-    def diff(self):
-        # TODO: move diff and classify here?
-        pass
 
 if __name__ == "__main__":
     prep = PrepareData(geo_file='data/log/02_12_2_geo.csv', accelero_file='data/log/02_12_2_accelero.csv')
@@ -215,6 +233,6 @@ if __name__ == "__main__":
     diff_class = classification.differentiate(diff_xyz, xyz, time)
     print(diff_class)
     # Classification.write_csv(data_geo, diff_class)
-    Classification.classify_geo_data(diff_class, time_geo)
+    Classification.classify_geo_data(diff_class, time_geo, data_accelero)
 
     # TODO: make geojson lines
