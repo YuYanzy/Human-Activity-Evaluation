@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from prepareData import PrepareData
+from geoViz import GeoViz
 import pandas as pd
 import csv
 import requests
@@ -235,4 +236,6 @@ if __name__ == "__main__":
     # Classification.write_csv(data_geo, diff_class)
     Classification.classify_geo_data(diff_class, time_geo, data_accelero)
 
-    # TODO: make geojson lines
+    GeoViz.make_geojson(data_geo, filename="data/processed/test2.geojson")
+
+

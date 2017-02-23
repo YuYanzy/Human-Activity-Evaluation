@@ -53,7 +53,7 @@ class PrepareData:
         """
 
         data = pd.read_csv(self.accelero_file)
-        id = data["ID"]
+        #id = data["ID"]
         x = data["X"]
         y = data["Y"]
         z = data["Z"]
@@ -61,7 +61,10 @@ class PrepareData:
         time =data["Time"]
         activity = data["Activity"]
         activity2 = data["Activity2"]
-        
+
+        #New ID field
+        id = [index for index in range(len(data))]
+        data['INDEX'] = id
         return x, y, z, xyz, time, activity, activity2, data
 
     def read_geodata(self):
@@ -81,6 +84,10 @@ class PrepareData:
         time = data["TIME"]
         activity = data["ACTIVITY"]
         activity2 =data["ACTIVITY2"]
+
+        #New ID field
+        id = [index for index in range(len(data))]
+        data['ID'] = id
 
         return lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data
 
