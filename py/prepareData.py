@@ -64,7 +64,7 @@ class PrepareData:
 
         #New ID field
         id = [index for index in range(len(data))]
-        data['INDEX'] = id
+        data['ID'] = id
         return x, y, z, xyz, time, activity, activity2, data
 
     def read_geodata(self):
@@ -87,7 +87,11 @@ class PrepareData:
 
         #New ID field
         id = [index for index in range(len(data))]
-        data['ID'] = id
+        data["ID"] = id
+
+        # Convert m/s to km/h
+        speed = [speed * 3.6 for speed in speed]
+        data["SPEED"] = speed
 
         return lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data
 

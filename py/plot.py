@@ -62,16 +62,15 @@ if __name__ == "__main__":
     diff_xyz = classification.diff_avg(x, y, z, xyz)
     diff_class = classification.differentiate(diff_xyz, xyz, time)
 
-    print (diff_class)
     print(prep.calibration(xyz))
-    print (len(diff_class))
-    print (len(xyz))
 
-
-    # #TODO: Make diff_class a seperate method
     # Plot.plot(x, y, z, xyz, time, diff_class)
     a = []
     for i in diff_class:
        a.append(i[0])
     print (a)
     Plot.plot(x, y, z, xyz, time, a, speed, time_geo)
+
+
+    # classification.classify_geo_data(diff_class,time_geo,data,data_geo)
+    # Plot.plot(x, y, z, xyz, time, data_geo['Diff class'], speed, time_geo)

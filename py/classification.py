@@ -84,7 +84,7 @@ class Classification:
 
     def diff_avg2(self, x, y, z, xyz, time):
         """
-
+        Inactive?
         :param x:
         :param y:
         :param z:
@@ -148,7 +148,7 @@ class Classification:
         return diff_class
 
     @staticmethod
-    def classify_geo_data(diff_class, time_geo, data_accelero):
+    def classify_geo_data(diff_class, time_geo, data_accelero, data_geo):
         diff_class_geo_time = []
         time_geo = list(time_geo)
 
@@ -160,11 +160,11 @@ class Classification:
         temp_list = []
         temp_diff_list = []
         diff_list = []
-        for j in range(1, len(diff_class_geo_time)):  # Diff class_geo_time = [[diff_class, geo time based on closest value from accelero time]]
-            temp_time = diff_class_geo_time[j][1]  # Temp time = [geo_time1, geo_time2, ..., geo_time_n]
-            if temp_time == diff_class_geo_time[j - 1][1]:  # if geo_time == geo_time - 1
-                temp_list.append(diff_class_geo_time[j])  # temp_list = [[diff_class, geo time based on closest value from accelero time]] without
-                temp_diff_list.append(diff_class_geo_time[j][0])  # temp_diff_list = [diff classes which coresseponds to time]
+        for j in range(1, len(diff_class_geo_time)):        # Diff class_geo_time = [[diff_class, geo time based on closest value from accelero time]]
+            temp_time = diff_class_geo_time[j][1]               # Temp time = [geo_time1, geo_time2, ..., geo_time_n]
+            if temp_time == diff_class_geo_time[j - 1][1]:      # if geo_time == geo_time - 1
+                temp_list.append(diff_class_geo_time[j])            # temp_list = [[diff_class, geo time based on closest value from accelero time]] without
+                temp_diff_list.append(diff_class_geo_time[j][0])    # temp_diff_list = [diff classes which coresseponds to time]
                 print(temp_diff_list)
             else:
                 print('true')
@@ -187,10 +187,17 @@ class Classification:
         print(len(diff_list))
 
         data_geo['Diff class'] = diff_list
+
+        # TODO: move this
         data_geo.to_csv("data/processed/test.csv")
 
     @staticmethod
     def test(data):
+        """
+        Inactive
+        :param data:
+        :return:
+        """
         kmh = 3.6
         a = pd.DataFrame()
         for speed in data["SPEED"]:
@@ -202,26 +209,44 @@ class Classification:
             # speed.to_csv(path_or_buf="data/processed/pandacsv.csv", index=True)
         # TODO: learn Pandas
 
+    # @staticmethod
+    # def write_csv(data_geo, diff_class):
+    #     csv_out = "data/processed/output.csv"
+    #     csvfile_output = open(csv_out, 'w')
+    #     csv_writer = csv.writer(csvfile_output)
+    #     csv_writer.writerow(['ID', 'LAT', 'LON', 'SPEED', 'ACTIVITY', ])
+    #
+    #     for i in range(len(data_geo)):
+    #         # print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
+    #
+    #         if Classification.read_api_tog(data_geo["LAT"][i], data_geo["LON"][i])[1]:
+    #             csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i], "Train"])
+    #         elif data_geo["SPEED"][i] >= 10:
+    #             csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i], "Driving"])
+    #         elif data_geo["SPEED"][i] < 1.5:
+    #             csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i], "Stationary"])
+    #         else:
+    #             csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] , "Walking"])
+    #     csvfile_output.close()
+
     @staticmethod
     def write_csv(data_geo, diff_class):
-        kmh = 3.6
-        csv_out = "data/processed/output.csv"
-        csvfile_output = open(csv_out, 'w')
-        csv_writer = csv.writer(csvfile_output)
-        csv_writer.writerow(['ID', 'LAT', 'LON', 'SPEED', 'ACTIVITY', ])
+        activity = []
 
         for i in range(len(data_geo)):
             # print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
 
             if Classification.read_api_tog(data_geo["LAT"][i], data_geo["LON"][i])[1]:
-                csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Train"])
-            elif data_geo["SPEED"][i] * kmh >= 10:
-                csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Driving"])
-            elif data_geo["SPEED"][i] * kmh < 1.5:
-                csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Stationary"])
+                activity.append("Train")
+            elif data_geo["SPEED"][i] >= 10:
+                activity.append("Driving")
+            elif data_geo["SPEED"][i] < 1.5:
+                activity.append("Stationary")
             else:
-                csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] * kmh, "Walking"])
-        csvfile_output.close()
+                activity.append("Walking")
+
+        data_geo["Processed Activity"] = activity
+
 
 
 if __name__ == "__main__":
@@ -232,9 +257,8 @@ if __name__ == "__main__":
 
     diff_xyz = classification.diff_maxmin(x, y, z, xyz)
     diff_class = classification.differentiate(diff_xyz, xyz, time)
-    print(diff_class)
-    # Classification.write_csv(data_geo, diff_class)
-    Classification.classify_geo_data(diff_class, time_geo, data_accelero)
+    Classification.classify_geo_data(diff_class, time_geo, data_accelero, data_geo)
+    Classification.write_csv(data_geo, diff_class)
 
     GeoViz.make_geojson(data_geo, filename="data/processed/test2.geojson")
 
