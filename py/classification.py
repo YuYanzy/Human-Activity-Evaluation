@@ -3,7 +3,6 @@
 from prepareData import PrepareData
 from geoViz import GeoViz
 import pandas as pd
-import csv
 import requests
 import json
 
@@ -22,7 +21,7 @@ class Classification:
         self.diff_range = diff_range
 
     @staticmethod
-    def read_api_tog(lat, lon):
+    def read_api_train(lat, lon):
         """
 
         :param lat:
@@ -36,7 +35,7 @@ class Classification:
         return req
 
     @staticmethod
-    def read_api_buss(lat, lon):
+    def read_api_bus(lat, lon):
         """
 
         :param lat:
@@ -82,27 +81,6 @@ class Classification:
     # TODO: implement method with number of peaks or similar, or summerize the magnitude
     # TODO: implement a method where sum of variance is used, see article
 
-    def diff_avg2(self, x, y, z, xyz, time):
-        """
-        Inactive?
-        :param x:
-        :param y:
-        :param z:
-        :param xyz:
-        :param time:
-        :return:
-        """
-        diff_xyz = []
-        diff_xyz_time = []
-        i = -1
-        for value in range(0, len(xyz) - self.diff_range, self.diff_range):
-            for j in range(self.diff_range):
-                i += 1
-                print(i)
-            diff_xyz_time.append([((max(abs(xyz[value:value + self.diff_range]))) - (
-                (sum(xyz[value:value + self.diff_range])) / self.diff_range)), time[i]])
-
-        return diff_xyz_time, diff_xyz
 
     def differentiate(self, diff_xyz, xyz, time):
         """
@@ -177,16 +155,14 @@ class Classification:
                 temp_list = []
                 temp_diff_list = []
 
-        print(len(data_geo))
 
         # Remaining values
         a = len(data_geo) - len(diff_list)
         for i in range(a):
             diff_list.append(1)
 
-        print(len(diff_list))
 
-        data_geo['Diff class'] = diff_list
+        data_geo["DIFF CLASS"] = diff_list
 
         # TODO: move this
         data_geo.to_csv("data/processed/test.csv")
@@ -209,25 +185,6 @@ class Classification:
             # speed.to_csv(path_or_buf="data/processed/pandacsv.csv", index=True)
         # TODO: learn Pandas
 
-    # @staticmethod
-    # def write_csv(data_geo, diff_class):
-    #     csv_out = "data/processed/output.csv"
-    #     csvfile_output = open(csv_out, 'w')
-    #     csv_writer = csv.writer(csvfile_output)
-    #     csv_writer.writerow(['ID', 'LAT', 'LON', 'SPEED', 'ACTIVITY', ])
-    #
-    #     for i in range(len(data_geo)):
-    #         # print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
-    #
-    #         if Classification.read_api_tog(data_geo["LAT"][i], data_geo["LON"][i])[1]:
-    #             csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i], "Train"])
-    #         elif data_geo["SPEED"][i] >= 10:
-    #             csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i], "Driving"])
-    #         elif data_geo["SPEED"][i] < 1.5:
-    #             csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i], "Stationary"])
-    #         else:
-    #             csv_writer.writerow([i, data_geo["LAT"][i], data_geo["LON"][i], data_geo["SPEED"][i] , "Walking"])
-    #     csvfile_output.close()
 
     @staticmethod
     def write_csv(data_geo, diff_class):
@@ -235,8 +192,8 @@ class Classification:
 
         for i in range(len(data_geo)):
             # print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
-
-            if Classification.read_api_tog(data_geo["LAT"][i], data_geo["LON"][i])[1]:
+            print('hallo')
+            if Classification.read_api_train(data_geo["LAT"][i], data_geo["LON"][i])[1]:
                 activity.append("Train")
             elif data_geo["SPEED"][i] >= 10:
                 activity.append("Driving")
@@ -247,7 +204,31 @@ class Classification:
 
         data_geo["Processed Activity"] = activity
 
+    # @staticmethod
+    # def write_csv(data_geo, diff_class):
+    #     activity = []
+    #
+    #     for i in range(len(data_geo)):
+    #
+    #         if Classification.read_api_tog(data_geo["LAT"][i], data_geo["LON"][i])[1] and :
+    #             activity.append("Train")
+    #         elif data_geo["SPEED"][i] >= 10:
+    #             activity.append("Driving")
+    #         elif data_geo["SPEED"][i] < 1.5:
+    #             activity.append("Stationary")
+    #         else:
+    #             activity.append("Walking")
+    #
+    #     data_geo["Processed Activity"] = activity
 
+    @staticmethod
+    def smooth_data(data_geo):
+        # TODO: try this on raw accelerometer data as well
+        for counter in range(len(data_geo)):
+            temp_diff_class = data_geo["DIFF CLASS"][counter]
+            print(temp_diff_class)
+
+        # TODO: Not sure how to this smart, maybe try to get the classification in diff classes better to start with
 
 if __name__ == "__main__":
     prep = PrepareData(geo_file='data/log/02_12_2_geo.csv', accelero_file='data/log/02_12_2_accelero.csv')
@@ -259,6 +240,8 @@ if __name__ == "__main__":
     diff_class = classification.differentiate(diff_xyz, xyz, time)
     Classification.classify_geo_data(diff_class, time_geo, data_accelero, data_geo)
     Classification.write_csv(data_geo, diff_class)
+
+    Classification.smooth_data(data_geo)
 
     GeoViz.make_geojson(data_geo, filename="data/processed/test2.geojson")
 

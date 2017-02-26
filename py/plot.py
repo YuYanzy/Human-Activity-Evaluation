@@ -3,7 +3,6 @@
 from prepareData import PrepareData
 import matplotlib.pyplot as plt
 from classification import Classification
-import datetime
 
 __author__ = 'eirikaa'
 
@@ -26,16 +25,10 @@ class Plot:
 
         # Plot XYZ data
         # plt.ion()
-        readable_time = []
-        for utc in time:
-            readable_time.append(datetime.datetime.fromtimestamp(utc))
-        print (readable_time)
-        print (len(readable_time))
-        print(len(xyz))
-        plt.plot(readable_time, xyz, "r", label="xyz")
-        plt.plot(readable_time, diff_class, "bo", label="movement")
+        plt.plot(time, xyz, "r", label="xyz")
+        plt.plot(time, diff_class, "bo", label="movement")
         plt.gcf().autofmt_xdate()
-        plt.axis([min(readable_time), max(readable_time), min(diff_class)-5, max(diff_class)+5])
+        plt.axis([min(time), max(time), min(diff_class)-5, max(diff_class)+5])
         plt.show()
 
 
@@ -55,8 +48,8 @@ class Plot:
 if __name__ == "__main__":
     prep = PrepareData(geo_file='data/log/02_18_geo.csv', accelero_file='data/log/02_18_accelero.csv')
     classification = Classification(diff_range=10)
-    x, y, z, xyz, time, activity, activity2, data = prep.read_accelerometer_data()
-    lat, lon, speed, accuracy, altitude, heading, time_geo, activity, activity2, data_geo = prep.read_geodata()
+    x, y, z, xyz, time, readable_time_acclero, activity, activity2, data = prep.read_accelerometer_data()
+    lat, lon, speed, accuracy, altitude, heading, time_geo, readable_time_geo, activity, activity2, data_geo = prep.read_geodata()
 
     # diff_xyz = ana.diff_maxmin(x, y, z, xyz)
     diff_xyz = classification.diff_avg(x, y, z, xyz)
@@ -65,11 +58,11 @@ if __name__ == "__main__":
     print(prep.calibration(xyz))
 
     # Plot.plot(x, y, z, xyz, time, diff_class)
-    a = []
+    clean_diff_class = []
     for i in diff_class:
-       a.append(i[0])
-    print (a)
-    Plot.plot(x, y, z, xyz, time, a, speed, time_geo)
+       clean_diff_class.append(i[0])
+    print (clean_diff_class)
+    Plot.plot(x, y, z, xyz, readable_time_acclero, clean_diff_class, speed, time_geo)
 
 
     # classification.classify_geo_data(diff_class,time_geo,data,data_geo)

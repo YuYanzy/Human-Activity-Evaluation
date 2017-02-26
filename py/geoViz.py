@@ -60,7 +60,7 @@ class GeoViz:
 
     @staticmethod
     def make_geojson(df, filename):
-        import geojson
+        print (df)
         geometry = [Point(xy) for xy in zip(df.LON, df.LAT)]
         # df = df.drop(["LON", "LAT"], axis=1)
         geo_df = gpd.GeoDataFrame(df, geometry=geometry)
@@ -72,11 +72,11 @@ class GeoViz:
 if __name__ == "__main__":
 
     prep = PrepareData(geo_file="data/log/02_14_geo.csv", accelero_file="data/log/02_12_2_accelero.csv")
-    lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data_geo = prep.read_geodata()
+    lat, lon, speed, accuracy, altitude, heading, time, readable_time, activity, activity2, data_geo = prep.read_geodata()
     GeoViz.geopandas_viz(data_geo)
 
 
-    x, y, z, xyz, time, activity, activity2, data_acc= prep.read_accelerometer_data()
+    x, y, z, xyz, time, readable_time_acclero, activity, activity2, data_acc= prep.read_accelerometer_data()
     bar = vincent.Line(data_acc['XYZ'])
     bar.to_json('vega.json')
 

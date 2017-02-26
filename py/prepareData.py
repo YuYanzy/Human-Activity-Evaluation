@@ -2,6 +2,7 @@
 
 import csv
 import pandas as pd
+import datetime
 
 __author__ = 'eirikaa'
 
@@ -65,7 +66,14 @@ class PrepareData:
         #New ID field
         id = [index for index in range(len(data))]
         data['ID'] = id
-        return x, y, z, xyz, time, activity, activity2, data
+
+        # Readable time
+        readable_time = []
+        for utc in time:
+            readable_time.append(datetime.datetime.fromtimestamp(utc))
+        data["HUMAN TIME"] = readable_time
+
+        return x, y, z, xyz, time, readable_time, activity, activity2, data
 
     def read_geodata(self):
         """
@@ -93,7 +101,14 @@ class PrepareData:
         speed = [speed * 3.6 for speed in speed]
         data["SPEED"] = speed
 
-        return lat, lon, speed, accuracy, altitude, heading, time, activity, activity2, data
+        # Readable time
+        readable_time = []
+        for utc in time:
+            # String for conversion to geojson
+            readable_time.append(str(datetime.datetime.fromtimestamp(utc)))
+        data["HUMAN TIME"] = readable_time
+
+        return lat, lon, speed, accuracy, altitude, heading, time, readable_time, activity, activity2, data
 
     def calibration(self, xyz):
         """
