@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from prepareData import PrepareData
 import matplotlib.pyplot as plt
-from classification import Classification
 
 __author__ = 'eirikaa'
 
@@ -46,24 +44,4 @@ class Plot:
 
 
 if __name__ == "__main__":
-    prep = PrepareData(geo_file='data/log/02_18_geo.csv', accelero_file='data/log/02_18_accelero.csv')
-    classification = Classification(diff_range=10)
-    x, y, z, xyz, time, readable_time_acclero, activity, activity2, data = prep.read_accelerometer_data()
-    lat, lon, speed, accuracy, altitude, heading, time_geo, readable_time_geo, activity, activity2, data_geo = prep.read_geodata()
-
-    # diff_xyz = ana.diff_maxmin(x, y, z, xyz)
-    diff_xyz = classification.diff_avg(x, y, z, xyz)
-    diff_class = classification.differentiate(diff_xyz, xyz, time)
-
-    print(prep.calibration(xyz))
-
-    # Plot.plot(x, y, z, xyz, time, diff_class)
-    clean_diff_class = []
-    for i in diff_class:
-       clean_diff_class.append(i[0])
-    print (clean_diff_class)
-    Plot.plot(x, y, z, xyz, readable_time_acclero, clean_diff_class, speed, time_geo)
-
-
-    # classification.classify_geo_data(diff_class,time_geo,data,data_geo)
-    # Plot.plot(x, y, z, xyz, time, data_geo['Diff class'], speed, time_geo)
+    pass

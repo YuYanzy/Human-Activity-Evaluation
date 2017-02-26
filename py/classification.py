@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from prepareData import PrepareData
-from geoViz import GeoViz
 import pandas as pd
 import requests
 import json
@@ -120,7 +118,7 @@ class Classification:
 
         # Remaining values
         a = len(xyz) - len(diff_class)
-        for i in range(a):
+        for _ in range(a):
             diff_class.append([1, 0])
 
         return diff_class
@@ -231,18 +229,7 @@ class Classification:
         # TODO: Not sure how to this smart, maybe try to get the classification in diff classes better to start with
 
 if __name__ == "__main__":
-    prep = PrepareData(geo_file='data/log/02_12_2_geo.csv', accelero_file='data/log/02_12_2_accelero.csv')
-    classification = Classification(diff_range=10)
-    x, y, z, xyz, time, activity, activity2, data_accelero = prep.read_accelerometer_data()
-    lat, lon, speed, accuracy, altitude, heading, time_geo, activity, activity2, data_geo = prep.read_geodata()
+    pass
 
-    diff_xyz = classification.diff_maxmin(x, y, z, xyz)
-    diff_class = classification.differentiate(diff_xyz, xyz, time)
-    Classification.classify_geo_data(diff_class, time_geo, data_accelero, data_geo)
-    Classification.write_csv(data_geo, diff_class)
-
-    Classification.smooth_data(data_geo)
-
-    GeoViz.make_geojson(data_geo, filename="data/processed/test2.geojson")
 
 
