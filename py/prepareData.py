@@ -73,6 +73,14 @@ class PrepareData:
             readable_time.append(datetime.datetime.fromtimestamp(utc))
         data["HUMAN TIME"] = readable_time
 
+        # Time diff
+        time_diff = []
+        for counter in range(len(time) - 1):
+            time_diff.append(time[counter + 1] - time[counter])
+        time_diff.append(0)
+        data["TIME DIFF"] = time_diff
+
+
         return x, y, z, xyz, time, readable_time, activity, activity2, data
 
     def read_geodata(self):
@@ -107,6 +115,13 @@ class PrepareData:
             # String for conversion to geojson
             readable_time.append(str(datetime.datetime.fromtimestamp(utc)))
         data["HUMAN TIME"] = readable_time
+
+        # Time diff
+        time_diff = []
+        for counter in range(len(time)-1):
+            time_diff.append(time[counter+1]-time[counter])
+        time_diff.append(0)
+        data["TIME DIFF"] = time_diff
 
         return lat, lon, speed, accuracy, altitude, heading, time, readable_time, activity, activity2, data
 

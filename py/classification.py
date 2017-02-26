@@ -3,6 +3,7 @@
 import pandas as pd
 import requests
 import json
+import math
 
 __author__ = 'eirikaa'
 
@@ -45,12 +46,9 @@ class Classification:
         req = json.loads(req)
         return req
 
-    def diff_maxmin(self, x, y, z, xyz):
+    def diff_maxmin(self, xyz):
         """
 
-        :param x:
-        :param y:
-        :param z:
         :param xyz:
         :return:
         """
@@ -60,12 +58,9 @@ class Classification:
             diff_xyz.append((abs(max(xyz[value:value + self.diff_range]) - min(xyz[value:value + self.diff_range]))))
         return diff_xyz
 
-    def diff_avg(self, x, y, z, xyz):
+    def diff_avg(self, xyz):
         """
 
-        :param x:
-        :param y:
-        :param z:
         :param xyz:
         :return:
         """
@@ -77,8 +72,72 @@ class Classification:
         return diff_xyz
 
     # TODO: implement method with number of peaks or similar, or summerize the magnitude
-    # TODO: implement a method where sum of variance is used, see article
 
+    def diff_sum(self, xyz):
+        """
+
+        :param xyz:
+        :return:
+        """
+        diff_xyz = []
+        sum_xyz = 0
+        for value in range(len(xyz)):
+            sum_xyz += xyz[value]
+            if value % self.diff_range == 0 and value != 0:
+                diff_xyz.append(sum_xyz)
+                sum_xyz = 0
+
+
+        # sum_xyz = 0
+        # count = 0
+        # variance = 0
+        # diff_variance = []
+        # for value in range(len(xyz)):
+        #     sum_xyz += xyz[value]
+        #     if value&self.diff_range == 0:
+        #         mean = sum_xyz/self.diff_range
+        #         for counter in range(self.diff_range):
+        #             variance += (abs(xyz[counter] - mean))**2 / self.diff_range
+        #         diff_variance.append(variance)
+        #
+        # print (diff_variance)
+        # print(len(diff_variance))
+
+
+        return diff_xyz
+
+    def diff_sum_variance(self, xyz):
+        """
+
+        :param xyz:
+        :return:
+        """
+
+        diff_xyz = []
+        sum_xyz = 0
+        temp_value = []
+        variance = []
+
+        for counter in range(len(xyz)):
+            sum_xyz += xyz[counter]
+            temp_value.append(xyz[counter])
+            if counter % self.diff_range == 0 and counter != 0:
+                mean = sum_xyz / self.diff_range
+                # for i in temp_value:
+                variance.append(sum((mean-value)**2 for value in temp_value) / len(temp_value))
+                diff_xyz.append(sum_xyz)
+                sum_xyz = 0
+                temp_value = []
+
+        std = [math.sqrt(var) for var in variance]
+
+        return variance
+
+        # TODO: sum of variance?
+        # TODO: implement method to
+    def num_steps(self):
+        pass
+    # TODO: findpeaks
 
     def differentiate(self, diff_xyz, xyz, time):
         """
@@ -88,7 +147,7 @@ class Classification:
         :param time:
         :return:
         """
-
+        # TODO: Move the diff methods here
         activity_threshold = 2.5
         hard_activity_threshold = 10
         activity = 25

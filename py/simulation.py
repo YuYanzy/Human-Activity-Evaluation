@@ -21,7 +21,7 @@ class Simulation:
         x, y, z, xyz, time_accelero, readable_time_accelero, activity, activity2, data_accelero = prep.read_accelerometer_data()
         lat, lon, speed, accuracy, altitude, heading, time_geo, readable_time_geo, activity, activity2, data_geo = prep.read_geodata()
 
-        diff_xyz = classification.diff_maxmin(x, y, z, xyz)
+        diff_xyz = classification.diff_maxmin(xyz)
         diff_class = classification.differentiate(diff_xyz, xyz, time_accelero)
         Classification.classify_geo_data(diff_class, time_geo, data_accelero, data_geo)
         # Classification.write_csv(data_geo, diff_class)
@@ -41,7 +41,9 @@ class Simulation:
         lat, lon, speed, accuracy, altitude, heading, time_geo, readable_time_geo, activity, activity2, data_geo = prep.read_geodata()
 
         # diff_xyz = ana.diff_maxmin(x, y, z, xyz)
-        diff_xyz = classification.diff_avg(x, y, z, xyz)
+        diff_xyz = classification.diff_avg(xyz)
+        print ('diff_xyz', len(diff_xyz))
+        classification.diff_sum_variance(xyz)
         diff_class = classification.differentiate(diff_xyz, xyz, time)
 
         print(prep.calibration(xyz))
