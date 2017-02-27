@@ -87,23 +87,6 @@ class Classification:
                 diff_xyz.append(sum_xyz)
                 sum_xyz = 0
 
-
-        # sum_xyz = 0
-        # count = 0
-        # variance = 0
-        # diff_variance = []
-        # for value in range(len(xyz)):
-        #     sum_xyz += xyz[value]
-        #     if value&self.diff_range == 0:
-        #         mean = sum_xyz/self.diff_range
-        #         for counter in range(self.diff_range):
-        #             variance += (abs(xyz[counter] - mean))**2 / self.diff_range
-        #         diff_variance.append(variance)
-        #
-        # print (diff_variance)
-        # print(len(diff_variance))
-
-
         return diff_xyz
 
     def diff_sum_variance(self, xyz):

@@ -70,20 +70,4 @@ class GeoViz:
 
 
 if __name__ == "__main__":
-
-    prep = PrepareData(geo_file="data/log/02_14_geo.csv", accelero_file="data/log/02_12_2_accelero.csv")
-    lat, lon, speed, accuracy, altitude, heading, time, readable_time, activity, activity2, data_geo = prep.read_geodata()
-    GeoViz.geopandas_viz(data_geo)
-
-
-    x, y, z, xyz, time, readable_time_acclero, activity, activity2, data_acc= prep.read_accelerometer_data()
-    bar = vincent.Line(data_acc['XYZ'])
-    bar.to_json('vega.json')
-
-    # leaflet('vega.json')
-    # leaflet2()
-
-    # print (data_acc["XYZ"][3:5])
-    #
-    # for i in range(len(data_acc["XYZ"])-10):
-    #     vincent.Line(data_acc['XYZ'][i:i+10]).to_json("data/vega/vega"+str(i)+".json")
+    pass

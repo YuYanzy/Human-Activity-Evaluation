@@ -63,6 +63,7 @@ class PrepareData:
         activity = data["Activity"]
         activity2 = data["Activity2"]
 
+        #TODO: if x and y and z = 0, not necesarry anymore?
         #New ID field
         id = [index for index in range(len(data))]
         data['ID'] = id
