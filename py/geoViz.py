@@ -1,10 +1,8 @@
-from prepareData import PrepareData
 import geopandas as gpd
 from shapely.geometry import Point
 import matplotlib.pyplot as plt
 import folium
 import json
-import vincent
 
 class GeoViz:
     def __init__(self):

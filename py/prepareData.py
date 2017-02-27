@@ -64,6 +64,7 @@ class PrepareData:
         activity2 = data["Activity2"]
 
         #TODO: if x and y and z = 0, not necesarry anymore?
+        # TODO: xyz - mean, instead of xyz - g
         #New ID field
         id = [index for index in range(len(data))]
         data['ID'] = id
@@ -124,12 +125,32 @@ class PrepareData:
         time_diff.append(0)
         data["TIME DIFF"] = time_diff
 
+        # Angle
+        angle = PrepareData.compute_angle(heading)
+        data["ANGLE"] = angle
+
         return lat, lon, speed, accuracy, altitude, heading, time, readable_time, activity, activity2, data
+
+    @staticmethod
+    def compute_angle(heading):
+        """
+        Computet angle between points
+
+        :param heading:
+        :return:
+        """
+
+        angle = []
+        for counter in range(len(heading)-1):
+            angle.append(heading[counter]-heading[counter+1])
+        angle.append(0)
+        return angle
+
 
     def calibration(self, xyz):
         """
 
-        :param xyz: sqrt(x**2 + y**2 + z**2)
+        :param xyz: sqrt(x**2 + y**2 + z**2) - g
         :return: average of xyz
         """
         return sum(xyz)/len(xyz)

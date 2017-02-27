@@ -23,13 +23,13 @@ class Simulation:
         lat, lon, speed, accuracy, altitude, heading, time_geo, readable_time_geo, activity, activity2, data_geo = prep.read_geodata()
 
         diff_xyz = classification.diff_maxmin(xyz)
-        diff_class = classification.differentiate(diff_xyz, xyz, time_accelero)
+        diff_class = classification.differentiate(diff_xyz, xyz, time_accelero, hard_activity_threshold=13, activity_threshold=4)
         Classification.classify_geo_data(diff_class, time_geo, data_accelero, data_geo)
         # Classification.write_csv(data_geo, diff_class)
 
         Classification.smooth_data(data_geo)
 
-        GeoViz.make_geojson(data_geo, filename="data/processed/test2.geojson")
+        GeoViz.make_geojson(data_geo, filename="data/processed/test3.geojson")
         ###
 
     @staticmethod
@@ -64,6 +64,8 @@ class Simulation:
 
     @staticmethod
     def viz():
+
+        ### GeoViz
         prep = PrepareData(geo_file="data/log/02_14_geo.csv", accelero_file="data/log/02_12_2_accelero.csv")
         lat, lon, speed, accuracy, altitude, heading, time, readable_time, activity, activity2, data_geo = prep.read_geodata()
         GeoViz.geopandas_viz(data_geo)
@@ -82,6 +84,6 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    # Simulation.classification()
+    Simulation.classification()
     # Simulation.plot()
-    Simulation.viz()
+    # Simulation.viz()

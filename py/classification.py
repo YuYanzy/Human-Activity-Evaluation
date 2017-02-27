@@ -122,7 +122,7 @@ class Classification:
         pass
     # TODO: findpeaks
 
-    def differentiate(self, diff_xyz, xyz, time):
+    def differentiate(self, diff_xyz, xyz, time, activity_threshold = 2.5, hard_activity_threshold = 10):
         """
 
         :param diff_xyz:
@@ -131,8 +131,6 @@ class Classification:
         :return:
         """
         # TODO: Move the diff methods here
-        activity_threshold = 2.5
-        hard_activity_threshold = 10
         activity = 25
         hard_activity = 30
         low_activity = -15
