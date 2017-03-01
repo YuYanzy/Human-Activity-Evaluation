@@ -69,8 +69,6 @@ export default class masApp extends Component {
                     heading: heading
                 });
                 this.fetchGeolocation(lat,lon,speed,accuracy,altitude,heading,this.state.activity);
-                // TODO: test geolocation her, hindre geolocation i å rendre eller sensorene
-
             },
             (error) => alert(JSON.stringify(error)),
             {enableHighAccuracy: true, timeout: 0, maximumAge: 1000, distanceFilter:4}
@@ -78,7 +76,7 @@ export default class masApp extends Component {
             //FIXME: distancefilter
         );
 
-        SensorManager.startAccelerometer(300); // Start the accelerometer with a minimum delay of 100 ms between events
+        SensorManager.startAccelerometer(300); // Start the accelerometer with a minimum delay of 300 ms between events
         DeviceEventEmitter.addListener("Accelerometer", function (data) {
             var x = data.x;
             var y = data.y;
@@ -132,10 +130,7 @@ export default class masApp extends Component {
         }.bind(this));*/
     }
 
-
-
     fetchGeolocation(lat, lon, speed, accuracy, altitude, heading, activity) {
-
 
         var URL = "http://138.68.86.63/storeGNSS?lat=" + lat + "&lon=" + lon + "&speed=" + speed +
             "&accuracy=" + accuracy + "&altitude=" + altitude +  "&heading=" + heading + "&activity=" + activity;

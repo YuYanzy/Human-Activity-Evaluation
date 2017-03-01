@@ -3,6 +3,7 @@
 import csv
 import pandas as pd
 import datetime
+import math
 
 __author__ = 'eirikaa'
 
@@ -82,6 +83,9 @@ class PrepareData:
         time_diff.append(0)
         data["TIME DIFF"] = time_diff
 
+        # Subtract mean magnitude instead of g = 9.81
+        magNoG = PrepareData.mean_gravity(x, y, z)
+        data["magNoG"] = magNoG
 
         return x, y, z, xyz, time, readable_time, activity, activity2, data
 
@@ -134,7 +138,7 @@ class PrepareData:
     @staticmethod
     def compute_angle(heading):
         """
-        Computet angle between points
+        Compute angle between points
 
         :param heading:
         :return:
@@ -146,6 +150,23 @@ class PrepareData:
         angle.append(0)
         return angle
 
+    @staticmethod
+    def mean_gravity(x, y, z):
+        """
+        Compute mean gravity
+        :param x:
+        :param y:
+        :param z:
+        :return:
+        """
+
+        mag = []
+        for counter in range(len(x)):
+            mag.append((math.sqrt((x[counter]) ** 2 + (y[counter]) ** 2 + (z[counter]) ** 2)))
+        mean = sum(mag)/len(mag)
+        magNoG = [x-mean for x in mag]
+
+        return magNoG
 
     def calibration(self, xyz):
         """

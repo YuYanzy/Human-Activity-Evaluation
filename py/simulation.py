@@ -54,6 +54,8 @@ class Simulation:
         for i in diff_class:
             clean_diff_class.append(i[0])
         print(clean_diff_class)
+
+        # Can change xyz with data["magNoG"]
         Plot.plot(x, y, z, xyz, readable_time_acclero, clean_diff_class, speed, time_geo)
 
 
@@ -84,6 +86,6 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    Simulation.classification()
-    # Simulation.plot()
+    # Simulation.classification()
+    Simulation.plot()
     # Simulation.viz()
