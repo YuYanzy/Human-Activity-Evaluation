@@ -12,12 +12,14 @@ class Classification:
     """
     This class will classify and differentiate data
     """
-    def __init__(self, diff_range):
+    def __init__(self, diff_range, data_geo):
         """
 
         :param diff_range: The number of elements in the data lists which will make up epochs
         """
         self.diff_range = diff_range
+        self.data_geo = data_geo
+        # TODO: data_geo
 
     @staticmethod
     def read_api_train(lat, lon):
@@ -116,8 +118,6 @@ class Classification:
 
         return variance
 
-        # TODO: sum of variance?
-        # TODO: implement method to
     def num_steps(self):
         pass
     # TODO: findpeaks
@@ -163,8 +163,7 @@ class Classification:
 
         return diff_class
 
-    @staticmethod
-    def classify_geo_data(diff_class, time_geo, data_accelero, data_geo):
+    def classify_geo_data(self, diff_class, time_geo, data_accelero):
         diff_class_geo_time = []
         time_geo = list(time_geo)
 
@@ -195,15 +194,15 @@ class Classification:
 
 
         # Remaining values
-        a = len(data_geo) - len(diff_list)
+        a = len(self.data_geo) - len(diff_list)
         for i in range(a):
             diff_list.append(1)
 
 
-        data_geo["DIFF CLASS"] = diff_list
+        self.data_geo["DIFF CLASS"] = diff_list
 
         # TODO: move this
-        data_geo.to_csv("data/processed/test.csv")
+        self.data_geo.to_csv("data/processed/test.csv")
 
     @staticmethod
     def test(data):
@@ -224,40 +223,48 @@ class Classification:
         # TODO: learn Pandas
 
 
-    @staticmethod
-    def write_csv(data_geo, diff_class):
+    def activity(self):
+        """
+
+        :return:
+        """
         activity = []
 
-        for i in range(len(data_geo)):
-            # print((Process.read_API_tog(data_geo["LAT"][i], data_geo["LON"][i])))
-            print('hallo')
-            if Classification.read_api_train(data_geo["LAT"][i], data_geo["LON"][i])[1]:
+        for i in range(len(self.data_geo)):
+            if Classification.read_api_train(self.data_geo["LAT"][i],self.data_geo["LON"][i])[1]:
                 activity.append("Train")
-            elif data_geo["SPEED"][i] >= 10:
+            elif self.data_geo["SPEED"][i] >= 10:
                 activity.append("Driving")
-            elif data_geo["SPEED"][i] < 1.5:
+            elif self.data_geo["SPEED"][i] < 1.5:
                 activity.append("Stationary")
             else:
                 activity.append("Walking")
 
-        data_geo["Processed Activity"] = activity
+        self.data_geo["Processed Activity"] = activity
 
-    # @staticmethod
-    # def write_csv(data_geo, diff_class):
-    #     activity = []
-    #
-    #     for i in range(len(data_geo)):
-    #
-    #         if Classification.read_api_tog(data_geo["LAT"][i], data_geo["LON"][i])[1] and :
-    #             activity.append("Train")
-    #         elif data_geo["SPEED"][i] >= 10:
-    #             activity.append("Driving")
-    #         elif data_geo["SPEED"][i] < 1.5:
-    #             activity.append("Stationary")
-    #         else:
-    #             activity.append("Walking")
-    #
-    #     data_geo["Processed Activity"] = activity
+    def stops(self):
+        """
+
+        :return:
+        """
+        stops = []
+
+
+        for i in range(len(self.data_geo)):
+            temp = (Classification.read_api_bus(self.data_geo["LAT"][i], self.data_geo["LON"][i]))
+            stops.append(temp[2])
+        self.data_geo["STOPS"] = stops
+
+        # for i in range(len(data_geo)):
+        #     temp = (Classification.read_api_bus(data_geo["LAT"][i], data_geo["LON"][i]))
+        #     stops.append(temp[2])
+        # data_geo["STOPS"] = stops
+
+    @staticmethod
+    def bus(data_geo):
+        pass
+
+
 
     @staticmethod
     def smooth_data(data_geo):

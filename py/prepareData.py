@@ -164,7 +164,7 @@ class PrepareData:
         for counter in range(len(x)):
             mag.append((math.sqrt((x[counter]) ** 2 + (y[counter]) ** 2 + (z[counter]) ** 2)))
         mean = sum(mag)/len(mag)
-        magNoG = [x-mean for x in mag]
+        magNoG = [i-mean for i in mag]
 
         return magNoG
 

@@ -10,7 +10,9 @@ def confusion_matrix():
     pass
 
 
-
 def count_steps():
     # TODO: findpeaks
+    pass
+
+def fuzzy():
     pass
