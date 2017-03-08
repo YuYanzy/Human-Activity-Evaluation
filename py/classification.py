@@ -275,6 +275,26 @@ class Classification:
 
         # TODO: Not sure how to this smart, maybe try to get the classification in diff classes better to start with
 
+
+    def line_index(self):
+        # TODO: make new indexes for lines
+        line_index = []
+        id = 0
+        for i in range(len(self.data_geo)-1):
+            if (self.data_geo["DIFF CLASS"][i]) == (self.data_geo["DIFF CLASS"][i+1]):
+                line_index.append(id)
+            else:
+                line_index.append(id)
+                id +=1
+        line_index.append(id)
+        print(len(line_index))
+        print(len(self.data_geo))
+        print(line_index)
+
+        self.data_geo["LINE ID"] = line_index
+
+        # TODO: Get this to work properly, must have at least two cordinate pairs
+        # TODO: dont really need lines
 if __name__ == "__main__":
     pass
 

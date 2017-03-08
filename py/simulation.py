@@ -25,11 +25,12 @@ class Simulation:
         classification = Classification(diff_range=10, data_geo=data_geo)
 
         ### OPTIONAL METHODS
-        # diff_xyz = classification.diff_maxmin(xyz)
-        # diff_class = classification.differentiate(diff_xyz, xyz, time_accelero, hard_activity_threshold=13, activity_threshold=4)
-        # classification.classify_geo_data(diff_class, time_geo, data_accelero)
+        diff_xyz = classification.diff_maxmin(xyz)
+        diff_class = classification.differentiate(diff_xyz, xyz, time_accelero, hard_activity_threshold=13, activity_threshold=4)
+        classification.classify_geo_data(diff_class, time_geo, data_accelero)
         # classification.activity()
-        classification.stops()
+        # classification.stops()
+        classification.line_index()
         GeoViz.make_geojson(data_geo, filename="data/processed/test3.geojson")
         ###
 
@@ -83,8 +84,8 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    geo_file = 'data/log/02_12_2_geo.csv'
-    accelero_file = 'data/log/02_12_2_accelero.csv'
+    geo_file = 'data/log/02_12_geo.csv'
+    accelero_file = 'data/log/02_12_accelero.csv'
     sim = Simulation(geo_file, accelero_file)
     sim.classification()
     # sim.plot()

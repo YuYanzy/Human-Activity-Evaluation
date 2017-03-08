@@ -12,6 +12,7 @@ def confusion_matrix():
 
 def count_steps():
     # TODO: findpeaks
+    # https://blog.ytotech.com/2015/11/01/findpeaks-in-python/
     pass
 
 def fuzzy():

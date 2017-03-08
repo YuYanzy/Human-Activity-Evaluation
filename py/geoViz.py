@@ -1,5 +1,5 @@
 import geopandas as gpd
-from shapely.geometry import Point
+from shapely.geometry import Point, LineString
 import matplotlib.pyplot as plt
 import folium
 import json
@@ -58,13 +58,19 @@ class GeoViz:
 
     @staticmethod
     def make_geojson(df, filename):
-        print (df)
+        # POINTS
+
         geometry = [Point(xy) for xy in zip(df.LON, df.LAT)]
         # df = df.drop(["LON", "LAT"], axis=1)
         geo_df = gpd.GeoDataFrame(df, geometry=geometry)
         with open(filename, "w") as f:
             f.write(geo_df.to_json())
-        # TODO: make geojson lines
+
+        # LINES
+
+        # line_geo_df = geo_df.groupby(["LINE ID"])["geometry"].apply(lambda x: LineString(x.tolist()))
+        # line_geo_df = gpd.GeoDataFrame(line_geo_df, geometry=geometry)
+        # print (line_geo_df)
 
 
 if __name__ == "__main__":
