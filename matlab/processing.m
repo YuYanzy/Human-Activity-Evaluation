@@ -1,7 +1,7 @@
 %http://blogs.mathworks.com/community/2014/10/06/acquire-data-from-device-sensors-with-matlab-mobile/
 clc, clear all
 
-filename = '../py/data/exampledata/02_12_bil_accelero.csv';
+filename = '../py/data/log/03_09_accelero.csv';
 %data = readtable(filename);
 %csv
 
@@ -26,13 +26,16 @@ magNoG3 = mag;
 magNoG = xyz;
 
 % Plot magnitude.
-plot(time, magNoG, 'r');
+plot(time, magNoG, 'b');
 xlabel('Time (s)');
 ylabel('Acceleration (m/s^2)');
 
 % Use FINDPEAKS to determine the local maxima.
 minPeakHeight = std(magNoG);
 [pks, locs] = findpeaks(magNoG, 'MINPEAKHEIGHT', minPeakHeight);
+
+% Fs = 3
+% [pks, locs] = findpeaks(magNoG, Fs);
 
 numSteps = numel(pks)
 

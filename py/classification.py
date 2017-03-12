@@ -188,15 +188,18 @@ class Classification:
                 else:
                     diff_list.append(1)
                 print(diff_list)
-                print(len(diff_list))
+                print("len(diff_list)=", len(diff_list))
                 temp_list = []
                 temp_diff_list = []
 
 
         # Remaining values
         a = len(self.data_geo) - len(diff_list)
-        for i in range(a):
-            diff_list.append(1)
+        if a > 0:
+            for i in range(a):
+                diff_list.append(1)
+        elif a < 0:
+            diff_list.pop()
 
 
         self.data_geo["DIFF CLASS"] = diff_list
