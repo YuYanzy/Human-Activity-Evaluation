@@ -83,9 +83,13 @@ class PrepareData:
         time_diff.append(0)
         data["TIME DIFF"] = time_diff
 
+
         # Subtract mean magnitude instead of g = 9.81
-        magNoG = PrepareData.mean_gravity(x, y, z)
+        magNoG, mag = PrepareData.mean_gravity(x, y, z)
         data["magNoG"] = magNoG
+
+        # Magnitude
+        data["mag"] = mag
 
         return x, y, z, xyz, time, readable_time, activity, activity2, data
 
@@ -166,7 +170,7 @@ class PrepareData:
         mean = sum(mag)/len(mag)
         magNoG = [i-mean for i in mag]
 
-        return magNoG
+        return magNoG, mag
 
     def calibration(self, xyz):
         """

@@ -9,7 +9,7 @@ class Plot:
         pass
 
     @staticmethod
-    def plot(x, y, z, xyz, time, diff_class, speed, geo_time):
+    def plot_xyz(x, y, z, xyz, time, diff_class, speed, geo_time):
         """
 
         :param x:
@@ -24,13 +24,27 @@ class Plot:
         # Plot XYZ data
         # plt.ion()
         plt.plot(time, xyz, "r", label="xyz")
-        plt.plot(time, diff_class, "bo", label="movement")
+        plt.plot(time, diff_class, "bo", label="Activity")
+        plt.legend()
         plt.gcf().autofmt_xdate()
         plt.axis([min(time), max(time), min(diff_class)-5, max(diff_class)+5])
         plt.show()
 
 
         # TODO: få med speed i plottet
+
+    @staticmethod
+    def plot_3_axis(x, y, z, time):
+        plt.plot(time, x, 'r', label='x-axis')
+        plt.plot(time, y, 'b', label='y-axis')
+        plt.plot(time, z, 'g', label='z-axis')
+
+        plt.legend()
+
+        plt.gcf().autofmt_xdate()
+        plt.axis([min(time), max(time), min(x) - 5, max(y) + 20])
+        plt.show()
+
     @staticmethod
     def plot2(x, y, z, xyz, time, diff_class, speed, geo_time):
         fig, ax1 = plt.subplots()

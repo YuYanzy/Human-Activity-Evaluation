@@ -57,13 +57,15 @@ class Simulation:
         print(clean_diff_class)
 
         # Can change xyz with data_accelero["magNoG"]
-        Plot.plot(x, y, z, xyz, readable_time_acclero, clean_diff_class, speed, time_geo)
+        Plot.plot_xyz(x, y, z, data_accelero["mag"], readable_time_acclero, clean_diff_class, speed, time_geo)
 
         # classification.classify_geo_data(diff_class,time_geo,data_accelero)
         # Plot.plot(x, y, z, xyz, time, data_geo['Diff class'], speed, time_geo)
 
 
-        Plot.count_steps(data_accelero)
+        # Plot.count_steps(data_accelero)
+
+        Plot.plot_3_axis(x, y, z, readable_time_acclero)
         ###
 
     def viz(self):
