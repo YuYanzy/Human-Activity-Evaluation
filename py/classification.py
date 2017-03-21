@@ -163,7 +163,7 @@ class Classification:
 
         return diff_class
 
-    def classify_geo_data(self, diff_class, time_geo, data_accelero):
+    def classify_accelero(self, diff_class, time_geo, data_accelero):
         diff_class_geo_time = []
         time_geo = list(time_geo)
 
@@ -207,26 +207,8 @@ class Classification:
         # TODO: move this
         self.data_geo.to_csv("data/processed/test.csv")
 
-    @staticmethod
-    def test(data):
-        """
-        Inactive
-        :param data:
-        :return:
-        """
-        kmh = 3.6
-        a = pd.DataFrame()
-        for speed in data["SPEED"]:
-            if speed * kmh >= 10:
-                print("Driving", speed)
-            else:
-                print("Walking", speed)
 
-            # speed.to_csv(path_or_buf="data/processed/pandacsv.csv", index=True)
-        # TODO: learn Pandas
-
-
-    def activity(self):
+    def public_transport(self):
         """
 
         :return:
@@ -242,6 +224,9 @@ class Classification:
                 activity.append("Stationary")
             else:
                 activity.append("Walking")
+
+            # TODO: remove the elifs and else:
+            # TODO: make a method where all paramters is combined.
 
         self.data_geo["Processed Activity"] = activity
 

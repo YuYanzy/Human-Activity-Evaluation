@@ -27,9 +27,9 @@ class Simulation:
         ### OPTIONAL METHODS
         diff_xyz = classification.diff_maxmin(xyz)
         diff_class = classification.differentiate(diff_xyz, xyz, time_accelero, hard_activity_threshold=13, activity_threshold=4)
-        classification.classify_geo_data(diff_class, time_geo, data_accelero)
-        # classification.activity()
-        # classification.stops()
+        classification.classify_accelero(diff_class, time_geo, data_accelero)
+        classification.public_transport()
+        classification.stops()
         # classification.line_index()
         GeoViz.make_geojson(data_geo, filename="data/processed/test3.geojson")
 
@@ -57,7 +57,7 @@ class Simulation:
         print(clean_diff_class)
 
         # Can change xyz with data_accelero["magNoG"]
-        Plot.plot_xyz(x, y, z, data_accelero["mag"], readable_time_acclero, clean_diff_class, speed, time_geo)
+        Plot.plot_xyz(x, y, z, xyz, readable_time_acclero, clean_diff_class, speed, time_geo)
 
         # classification.classify_geo_data(diff_class,time_geo,data_accelero)
         # Plot.plot(x, y, z, xyz, time, data_geo['Diff class'], speed, time_geo)
@@ -92,6 +92,6 @@ if __name__ == "__main__":
     geo_file = 'data/log/03_09_geo.csv'
     accelero_file = 'data/log/03_09_accelero.csv'
     sim = Simulation(geo_file, accelero_file)
-    # sim.classification()
-    sim.plot()
+    sim.classification()
+    # sim.plot()
     # sim.viz()

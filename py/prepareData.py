@@ -157,7 +157,7 @@ class PrepareData:
     @staticmethod
     def mean_gravity(x, y, z):
         """
-        Compute mean gravity
+        Compute magnitude, mean magnitude, and magniitude - mean magnitude
         :param x:
         :param y:
         :param z:
