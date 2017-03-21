@@ -35,7 +35,6 @@ class Simulation:
 
         ###
 
-
     def plot(self):
 
         ### PLOT
@@ -61,7 +60,6 @@ class Simulation:
 
         # classification.classify_geo_data(diff_class,time_geo,data_accelero)
         # Plot.plot(x, y, z, xyz, time, data_geo['Diff class'], speed, time_geo)
-
 
         # Plot.count_steps(data_accelero)
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import pandas as pd
 import requests
 import json
 import math
@@ -122,14 +121,17 @@ class Classification:
         pass
     # TODO: findpeaks
 
-    def differentiate(self, diff_xyz, xyz, time, activity_threshold = 2.5, hard_activity_threshold = 10):
+    def differentiate(self, diff_xyz, xyz, time, activity_threshold=2.5, hard_activity_threshold=10):
         """
 
         :param diff_xyz:
         :param xyz:
         :param time:
+        :param activity_threshold:
+        :param hard_activity_threshold:
         :return:
         """
+
         # TODO: Move the diff methods here
         activity = 25
         hard_activity = 30
@@ -192,7 +194,6 @@ class Classification:
                 temp_list = []
                 temp_diff_list = []
 
-
         # Remaining values
         a = len(self.data_geo) - len(diff_list)
         if a > 0:
@@ -201,12 +202,10 @@ class Classification:
         elif a < 0:
             diff_list.pop()
 
-
         self.data_geo["DIFF CLASS"] = diff_list
 
         # TODO: move this
         self.data_geo.to_csv("data/processed/test.csv")
-
 
     def public_transport(self):
         """
@@ -216,7 +215,7 @@ class Classification:
         activity = []
 
         for i in range(len(self.data_geo)):
-            if Classification.read_api_train(self.data_geo["LAT"][i],self.data_geo["LON"][i])[1]:
+            if Classification.read_api_train(self.data_geo["LAT"][i], self.data_geo["LON"][i])[1]:
                 activity.append("Train")
             elif self.data_geo["SPEED"][i] >= 10:
                 activity.append("Driving")
@@ -237,22 +236,14 @@ class Classification:
         """
         stops = []
 
-
         for i in range(len(self.data_geo)):
             temp = (Classification.read_api_bus(self.data_geo["LAT"][i], self.data_geo["LON"][i]))
             stops.append(temp[2])
         self.data_geo["STOPS"] = stops
 
-        # for i in range(len(data_geo)):
-        #     temp = (Classification.read_api_bus(data_geo["LAT"][i], data_geo["LON"][i]))
-        #     stops.append(temp[2])
-        # data_geo["STOPS"] = stops
-
     @staticmethod
     def bus(data_geo):
         pass
-
-
 
     @staticmethod
     def smooth_data(data_geo):
@@ -263,7 +254,6 @@ class Classification:
 
         # TODO: Not sure how to this smart, maybe try to get the classification in diff classes better to start with
 
-
     def line_index(self):
         # TODO: make new indexes for lines
         line_index = []
@@ -273,7 +263,7 @@ class Classification:
                 line_index.append(id)
             else:
                 line_index.append(id)
-                id +=1
+                id += 1
         line_index.append(id)
         print(len(line_index))
         print(len(self.data_geo))
@@ -285,6 +275,3 @@ class Classification:
         # TODO: dont really need lines
 if __name__ == "__main__":
     pass
-
-
-

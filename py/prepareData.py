@@ -55,18 +55,18 @@ class PrepareData:
         """
 
         data = pd.read_csv(self.accelero_file)
-        #id = data["ID"]
+        # id = data["ID"]
         x = data["X"]
         y = data["Y"]
         z = data["Z"]
         xyz = data["XYZ"]
-        time =data["Time"]
+        time = data["Time"]
         activity = data["Activity"]
         activity2 = data["Activity2"]
 
-        #TODO: if x and y and z = 0, not necesarry anymore?
+        # TODO: if x and y and z = 0, not necesarry anymore?
         # TODO: xyz - mean, instead of xyz - g
-        #New ID field
+        # New ID field
         id = [index for index in range(len(data))]
         data['ID'] = id
 
@@ -82,7 +82,6 @@ class PrepareData:
             time_diff.append(time[counter + 1] - time[counter])
         time_diff.append(0)
         data["TIME DIFF"] = time_diff
-
 
         # Subtract mean magnitude instead of g = 9.81
         magNoG, mag = PrepareData.mean_gravity(x, y, z)
@@ -109,9 +108,9 @@ class PrepareData:
         heading = data["HEADING"]
         time = data["TIME"]
         activity = data["ACTIVITY"]
-        activity2 =data["ACTIVITY2"]
+        activity2 = data["ACTIVITY2"]
 
-        #New ID field
+        # New ID field
         id = [index for index in range(len(data))]
         data["ID"] = id
 

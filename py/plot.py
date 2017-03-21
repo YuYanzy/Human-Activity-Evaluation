@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 __author__ = 'eirikaa'
 
+
 class Plot:
     def __init__(self):
         pass
@@ -29,7 +30,6 @@ class Plot:
         plt.gcf().autofmt_xdate()
         plt.axis([min(time), max(time), min(diff_class)-5, max(diff_class)+5])
         plt.show()
-
 
         # TODO: få med speed i plottet
 
@@ -103,9 +103,9 @@ class Plot:
         # cb = np.array(data_accelero["XYZ"])
         cb = data_accelero["XYZ"].as_matrix()
 
-        indexes = peakutils.indexes(cb, thres=8/ max(cb), min_dist=3)
+        indexes = peakutils.indexes(cb, thres=8 / max(cb), min_dist=3)
         print(indexes)
-        plt.figure(figsize=(10,6))
+        plt.figure(figsize=(10, 6))
         pplot(data_accelero["Time"].as_matrix(), cb, indexes)
 
         # interpolatedIndexes = peakutils.interpolate(range(0, len(cb)), cb, ind=indexes)
