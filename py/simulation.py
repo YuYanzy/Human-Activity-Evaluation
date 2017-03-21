@@ -30,6 +30,7 @@ class Simulation:
         classification.classify_accelero(diff_class, time_geo, data_accelero)
         classification.public_transport()
         classification.stops()
+        classification.fuzzy()
         # classification.line_index()
         GeoViz.make_geojson(data_geo, filename="data/processed/test3.geojson")
 

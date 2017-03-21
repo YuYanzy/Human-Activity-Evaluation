@@ -149,7 +149,7 @@ class PrepareData:
 
         angle = []
         for counter in range(len(heading)-1):
-            angle.append(heading[counter]-heading[counter+1])
+            angle.append(abs(heading[counter]-heading[counter+1]))
         angle.append(0)
         return angle
 

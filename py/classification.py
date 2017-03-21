@@ -227,7 +227,7 @@ class Classification:
             # TODO: remove the elifs and else:
             # TODO: make a method where all paramters is combined.
 
-        self.data_geo["Processed Activity"] = activity
+        self.data_geo["TRANSPORT"] = activity
 
     def stops(self):
         """
@@ -245,11 +245,11 @@ class Classification:
     def bus(data_geo):
         pass
 
-    @staticmethod
-    def smooth_data(data_geo):
+
+    def smooth_data(self):
         # TODO: try this on raw accelerometer data as well
-        for counter in range(len(data_geo)):
-            temp_diff_class = data_geo["DIFF CLASS"][counter]
+        for counter in range(len(self.data_geo)):
+            temp_diff_class = self.data_geo["DIFF CLASS"][counter]
             print(temp_diff_class)
 
         # TODO: Not sure how to this smart, maybe try to get the classification in diff classes better to start with
@@ -273,5 +273,31 @@ class Classification:
 
         # TODO: Get this to work properly, must have at least two cordinate pairs
         # TODO: dont really need lines
+
+    def fuzzy(self):
+        transportation = 20
+        stationary = 2
+        classification = []
+        for counter in range(len(self.data_geo)):
+            if self.data_geo["SPEED"][counter] >= 10:
+                # Possibly transport or cycling
+                # else: Possibly cylcling and running, most likely walking or stationary
+                print(counter, "Speed ", self.data_geo["SPEED"][counter], self.data_geo["ACTIVITY"][counter])
+            if self.data_geo["DIFF CLASS"][counter] > 10:
+                # Possibly cycling, walking or runnning. A sort of activity
+                # else:  Transport or stationary
+                print(counter, "DIFF CLASS ", self.data_geo["DIFF CLASS"][counter], self.data_geo["ACTIVITY"][counter])
+            if self.data_geo["ACCURACY"][counter] < 15:
+                # Indoor, Possibly Public transport or driving
+                print(counter, "ACCURACY ", self.data_geo["ACCURACY"][counter], self.data_geo["ACTIVITY"][counter])
+            if self.data_geo["ANGLE"][counter] < 5:
+                print(counter, "ANGLE ", self.data_geo["ANGLE"][counter], self.data_geo["ACTIVITY"][counter])
+            if self.data_geo["TIME DIFF"][counter] > 4:
+                # Probably Stationary
+                # Correlates with Speed
+                print(counter, "TIME DIFF ", self.data_geo["TIME DIFF"][counter], self.data_geo["ACTIVITY"][counter])
+        # TODO: Loop through the if sentences, find possibilites, then decide most probable
+
+
 if __name__ == "__main__":
     pass
