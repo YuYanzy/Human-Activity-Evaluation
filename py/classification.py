@@ -3,6 +3,7 @@
 import requests
 import json
 import math
+import operator
 
 __author__ = 'eirikaa'
 
@@ -247,6 +248,10 @@ class Classification:
 
 
     def smooth_data(self):
+        """
+        Inactive
+        :return:
+        """
         # TODO: try this on raw accelerometer data as well
         for counter in range(len(self.data_geo)):
             temp_diff_class = self.data_geo["DIFF CLASS"][counter]
@@ -255,6 +260,10 @@ class Classification:
         # TODO: Not sure how to this smart, maybe try to get the classification in diff classes better to start with
 
     def line_index(self):
+        """
+        Inactive
+        :return:
+        """
         # TODO: make new indexes for lines
         line_index = []
         id = 0
@@ -276,52 +285,158 @@ class Classification:
 
     def fuzzy(self):
         transport = 20
-        stationary = 2
+        # stationary = 2
+
+
+        stationary = 1
+        walking = 2
+        running = 3
+        cycling = 4
+        car = 5
+        public_transport = 6
+
+
+        b = []
         classification = []
 
-        a = ""
         for counter in range(len(self.data_geo)):
+            temp_class = []
+            temp_stationary = 0         # 1
+            temp_walking = 0            # 2
+            temp_running = 0            # 3
+            temp_cycling = 0            # 4
+            temp_car = 0                # 5
+            temp_public_transport = 0   # 6
+            a = ""
+
+            dict_class = {}
+            for i in range(1,7):
+                dict_class[i] = 0
+
             if self.data_geo["SPEED"][counter] >= transport:
                 # Possibly transport or cycling
-                # else: Possibly cylcling and running, most likely walking or stationary
+                # else: Possibly cycling and running, most likely walking or stationary
                 print(counter, "Speed ", self.data_geo["SPEED"][counter], self.data_geo["ACTIVITY"][counter])
-                a = a + ("Possibly Transport or cycling ")
-            if not  self.data_geo["SPEED"][counter] >= transport:
-                a = a + ("Most likely walking or stationary, Possibly cycling or running ")
+                a = a + "Possibly Transport or cycling "
+                temp_class.append([car, 0.8])
+                temp_car += 0.8
+                dict_class[car] += 0.8
 
+                temp_class.append([public_transport, 0.8])
+                temp_public_transport += 0.8
+                dict_class[public_transport] += 0.8
+
+                temp_class.append([cycling, 0.3])
+                temp_cycling += 0.3
+                dict_class[cycling] += 0.3
+
+                temp_class.append([running, 0.1])
+                temp_running += 0.1
+                dict_class[running] += 0.1
+
+            if not self.data_geo["SPEED"][counter] >= transport:
+                a = a + "Most likely walking or stationary, Possibly cycling or running "
+                temp_class.append([stationary, 0.8])
+                temp_stationary += 0.8
+                dict_class[stationary] += 0.8
+
+                temp_class.append([walking, 0.8])
+                temp_walking += 0.8
+                dict_class[walking] += 0.8
+
+                temp_class.append([running, 0.5])
+                temp_running += 0.5
+                dict_class[running] += 0.5
+
+                temp_class.append([cycling, 0.4])
+                temp_cycling += 0.4
+                dict_class[cycling] += 0.4
+
+                temp_class.append([public_transport, 0.2])
+                temp_public_transport += 0.2
+                dict_class[public_transport] += 0.2
+
+                temp_class.append([car, 0.1])
+                temp_car += 0.1
+                dict_class[car] += 0.1
 
             if self.data_geo["DIFF CLASS"][counter] > 10:
+                # TODO: use all diff classes
                 # Possibly cycling, walking or runnning. A sort of activity
                 # else:  Transport or stationary
                 print(counter, "DIFF CLASS ", self.data_geo["DIFF CLASS"][counter], self.data_geo["ACTIVITY"][counter])
-                a = a + ("A sort of activity, possibly cycling or walking or running ")
-            if not self.data_geo["DIFF CLASS"][counter] > 10:
-                a = a + ("Transport or stationary ")
+                a = a + "A sort of activity, possibly cycling or walking or running "
+                temp_class.append([walking, 0.7])
+                temp_walking += 0.7
+                dict_class[walking] += 0.7
 
-            if self.data_geo["ACCURACY"][counter] < 15:
+                temp_class.append([running, 0.5])
+                temp_running += 0.5
+                dict_class[running] += 0.5
+
+                temp_class.append([cycling, 0.4])
+                temp_cycling += 0.4
+                dict_class[cycling] += 0.4
+
+            if not self.data_geo["DIFF CLASS"][counter] > 10:
+                a = a + "Transport or stationary "
+                temp_class.append([stationary, 0.8])
+                temp_stationary += 0.8
+                dict_class[stationary] += 0.8
+
+                temp_class.append([car, 0.7])
+                temp_car += 0.7
+                dict_class[car] += 0.7
+
+                temp_class.append([public_transport, 0.7])
+                temp_public_transport += 0.7
+                dict_class[public_transport] += 0.7
+
+            if self.data_geo["ACCURACY"][counter] > 15:
                 # Indoor, Possibly Public transport or driving
                 print(counter, "ACCURACY ", self.data_geo["ACCURACY"][counter], self.data_geo["ACTIVITY"][counter])
-                a = a + ("Indoor, possibly transport ")
-            if not self.data_geo["ACCURACY"][counter] < 15:
-                a = a + ("Pretty good accuracy ")
+                a = a + "Indoor, possibly transport "
+                temp_class.append([stationary, 0.8])
+                temp_stationary += 0.8
+                dict_class[stationary] += 0.8
+
+                temp_class.append([public_transport, 0.3])
+                temp_public_transport += 0.3
+                dict_class[public_transport] += 0.3
+
+                temp_class.append([car, 0.2])
+                temp_car += 0.2
+                dict_class[car] += 0.4
+
+            if not self.data_geo["ACCURACY"][counter] > 15:
+                a = a + "Pretty good accuracy "
 
             if self.data_geo["ANGLE"][counter] < 5:
                 print(counter, "ANGLE ", self.data_geo["ANGLE"][counter], self.data_geo["ACTIVITY"][counter])
-                a = a + ("Angle is less than 5 ")
+                a = a + "Angle is less than 5 "
             if not self.data_geo["ANGLE"][counter] < 5:
-                a = a + ("Angle is more than 5 ")
+                a = a + "Angle is more than 5 "
 
             if self.data_geo["TIME DIFF"][counter] > 4:
                 # Probably Stationary
                 # Correlates with Speed
                 print(counter, "TIME DIFF ", self.data_geo["TIME DIFF"][counter], self.data_geo["ACTIVITY"][counter])
-                a = a + ("Probably stationary ")
+                a = a + "Probably stationary "
             if not self.data_geo["TIME DIFF"][counter] > 4:
-                a = a + ("Probably moving ")
+                a = a + "Probably moving "
+
+
+            if self.data_geo["TRANSPORT"][counter] == "Train":
+                temp_class.append([public_transport, 0.9])
+                temp_public_transport += 0.9
+                dict_class[public_transport] += 0.
+            if not self.data_geo["TRANSPORT"][counter] == "Train":
+                pass
         # TODO: Loop through the if sentences, find possibilites, then decide most probable
 
-            print (a)
+            classification.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
 
+        self.data_geo["CLASSIFICATION"] = classification
 
 if __name__ == "__main__":
     pass

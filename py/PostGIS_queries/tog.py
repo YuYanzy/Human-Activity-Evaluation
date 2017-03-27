@@ -13,7 +13,7 @@ def buss(lon=LON, lat=LAT):
 
     try:
         conn = psycopg2.connect(dbname='r2o', user='johu',
-        password='kaffekopp', host='localhost', port=5432)
+        password='', host='localhost', port=5432)
     except ValueError:
         print('database ikke tilkoblet')
 
