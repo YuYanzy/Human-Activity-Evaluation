@@ -88,8 +88,8 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    geo_file = 'data/log/03_09_geo.csv'
-    accelero_file = 'data/log/03_09_accelero.csv'
+    geo_file = 'data/log/03_01_geo.csv'
+    accelero_file = 'data/log/03_01_accelero.csv'
     sim = Simulation(geo_file, accelero_file)
     sim.classification()
     # sim.plot()
