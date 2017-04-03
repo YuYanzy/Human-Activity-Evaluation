@@ -30,9 +30,9 @@ class Simulation:
         classification.classify_accelero(diff_class, time_geo, data_accelero)
         classification.public_transport()
         classification.stops()
-        classification.fuzzy()
+        classification.fuzzy2()
         # classification.line_index()
-        GeoViz.make_geojson(data_geo, filename="data/processed/test3.geojson")
+        GeoViz.make_geojson(data_geo, filename="data/processed/output.geojson")
 
         ###
 
@@ -88,8 +88,8 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    geo_file = 'data/log/03_01_geo.csv'
-    accelero_file = 'data/log/03_01_accelero.csv'
+    geo_file = 'data/log/03_09_geo.csv'
+    accelero_file = 'data/log/03_09_accelero.csv'
     sim = Simulation(geo_file, accelero_file)
     sim.classification()
     # sim.plot()

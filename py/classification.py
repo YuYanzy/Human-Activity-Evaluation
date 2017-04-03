@@ -73,7 +73,7 @@ class Classification:
                 (sum(xyz[value:value + self.diff_range])) / self.diff_range))
         return diff_xyz
 
-    # TODO: implement method with number of peaks or similar, or summerize the magnitude
+
 
     def diff_sum(self, xyz):
         """
@@ -205,8 +205,6 @@ class Classification:
 
         self.data_geo["DIFF CLASS"] = diff_list
 
-        # TODO: move this
-        self.data_geo.to_csv("data/processed/test.csv")
 
     def public_transport(self):
         """
@@ -218,13 +216,8 @@ class Classification:
         for i in range(len(self.data_geo)):
             if Classification.read_api_train(self.data_geo["LAT"][i], self.data_geo["LON"][i])[1]:
                 activity.append("Train")
-            elif self.data_geo["SPEED"][i] >= 10:
-                activity.append("Driving")
-            elif self.data_geo["SPEED"][i] < 1.5:
-                activity.append("Stationary")
             else:
-                activity.append("Walking")
-
+                activity.append("Not train")
             # TODO: remove the elifs and else:
             # TODO: make a method where all paramters is combined.
 
@@ -242,8 +235,8 @@ class Classification:
             stops.append(temp[2])
         self.data_geo["STOPS"] = stops
 
-    @staticmethod
-    def bus(data_geo):
+
+    def bus(self):
         pass
 
 
@@ -310,45 +303,46 @@ class Classification:
                 print(counter, "Speed ", self.data_geo["SPEED"][counter], self.data_geo["ACTIVITY"][counter])
                 a = a + "Possibly Transport or cycling "
                 dict_class[car] += 0.8
-
                 dict_class[public_transport] += 0.8
-
                 dict_class[cycling] += 0.3
-
                 dict_class[running] += 0.1
 
-            if not self.data_geo["SPEED"][counter] >= transport:
+            if self.data_geo["SPEED"][counter] < transport and self.data_geo["SPEED"][counter] > 3:
+                dict_class[stationary] += 0.1
+                dict_class[walking] += 0.9
+                dict_class[running] += 0.6
+                dict_class[cycling] += 0.5
+                dict_class[public_transport] += 0.3
+                dict_class[car] += 0.2
+
+            if  self.data_geo["SPEED"][counter] < 3:
                 a = a + "Most likely walking or stationary, Possibly cycling or running "
                 dict_class[stationary] += 0.8
-
-                dict_class[walking] += 0.8
-
-                dict_class[running] += 0.5
-
-                dict_class[cycling] += 0.4
-
-                dict_class[public_transport] += 0.2
-
+                dict_class[walking] += 0.3
+                dict_class[running] += 0.2
+                dict_class[cycling] += 0.1
+                dict_class[public_transport] += 0.1
                 dict_class[car] += 0.1
 
-            if self.data_geo["DIFF CLASS"][counter] > 10:
+            if self.data_geo["DIFF CLASS"][counter] == 25:
                 # TODO: use all diff classes
                 # Possibly cycling, walking or runnning. A sort of activity
                 # else:  Transport or stationary
                 print(counter, "DIFF CLASS ", self.data_geo["DIFF CLASS"][counter], self.data_geo["ACTIVITY"][counter])
                 a = a + "A sort of activity, possibly cycling or walking or running "
                 dict_class[walking] += 0.7
-
                 dict_class[running] += 0.5
-
                 dict_class[cycling] += 0.4
 
-            if not self.data_geo["DIFF CLASS"][counter] > 10:
+            if self.data_geo["DIFF CLASS"][counter] == 30:
+                dict_class[running] += 1
+                dict_class[walking] += 0.5
+                dict_class[cycling] += 0.7
+
+            if self.data_geo["DIFF CLASS"][counter] == -15:
                 a = a + "Transport or stationary "
                 dict_class[stationary] += 0.8
-
                 dict_class[car] += 0.7
-
                 dict_class[public_transport] += 0.7
 
             if self.data_geo["ACCURACY"][counter] > 15:
@@ -356,9 +350,7 @@ class Classification:
                 print(counter, "ACCURACY ", self.data_geo["ACCURACY"][counter], self.data_geo["ACTIVITY"][counter])
                 a = a + "Indoor, possibly transport "
                 dict_class[stationary] += 0.8
-
                 dict_class[public_transport] += 0.3
-
                 dict_class[car] += 0.4
             if not self.data_geo["ACCURACY"][counter] > 15:
                 a = a + "Pretty good accuracy "
@@ -366,6 +358,7 @@ class Classification:
             if self.data_geo["ANGLE"][counter] < 5:
                 print(counter, "ANGLE ", self.data_geo["ANGLE"][counter], self.data_geo["ACTIVITY"][counter])
                 a = a + "Angle is less than 5 "
+
             if not self.data_geo["ANGLE"][counter] < 5:
                 a = a + "Angle is more than 5 "
 
@@ -374,13 +367,14 @@ class Classification:
                 # Correlates with Speed
                 print(counter, "TIME DIFF ", self.data_geo["TIME DIFF"][counter], self.data_geo["ACTIVITY"][counter])
                 a = a + "Probably stationary "
+
             if not self.data_geo["TIME DIFF"][counter] > 4:
                 a = a + "Probably moving "
 
 
             if self.data_geo["TRANSPORT"][counter] == "Train":
-
                 dict_class[public_transport] += 0.9
+
             if not self.data_geo["TRANSPORT"][counter] == "Train":
                 pass
 
@@ -388,6 +382,83 @@ class Classification:
             classification.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
 
         self.data_geo["CLASSIFICATION"] = classification
+
+
+    def fuzzy2(self):
+        transport = 20
+        # stationary = 2
+
+
+        stationary = 1
+        walking = 2
+        running = 3
+        cycling = 4
+        car = 5
+        public_transport = 6
+
+        classification1 = []
+        classification2 = []
+
+        for counter in range(len(self.data_geo)):
+            dict_class = {}
+            for i in range(1, 4):
+                dict_class[i] = 0
+
+            # 1 = Moving
+            # 2 = Stationary
+            # 3 = Unknown
+
+            if self.data_geo["SPEED"][counter] > 5:
+                dict_class[1] += 10
+                dict_class[2] += 0
+
+            if self.data_geo["SPEED"][counter] <= 5 and self.data_geo["SPEED"][counter] > 2:
+                dict_class[1] += 10
+                dict_class[2] += 3
+
+            else:
+                dict_class[2] += 10
+
+            classification1.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
+
+        for counter in range(len(self.data_geo)):
+            dict_class = {}
+            for i in range(2, 4):
+                dict_class[i] = 0
+
+                # 2 = Transport
+                # 3 = Activity
+
+            if classification1[counter] == 1:
+
+                if self.data_geo["DIFF CLASS"][counter] == 30:
+                    dict_class[3] += 10
+                if self.data_geo["DIFF CLASS"][counter] == 25:
+                    dict_class[3] += 5
+                    dict_class[2] += 2
+                if self.data_geo["DIFF CLASS"][counter] == -15:
+                    dict_class[3] += 2
+                    dict_class[2] += 7
+                if self.data_geo["SPEED"][counter] > 40:
+                    dict_class[2] += 6
+                if self.data_geo["SPEED"][counter] <= 40 and self.data_geo["SPEED"][counter] > 20:
+                    dict_class[2] += 4
+                classification2.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
+            else:
+
+                classification2.append(1)
+
+        for counter in range(len(self.data_geo)):
+            dict_class = {}
+            for i in range(2, 4):
+                dict_class[i] = 0
+
+        self.data_geo["CLASSIFICATION"] = classification2
+
+
+
+
+
 
 if __name__ == "__main__":
     pass
