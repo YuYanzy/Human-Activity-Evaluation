@@ -398,6 +398,7 @@ class Classification:
 
         classification1 = []
         classification2 = []
+        classification3 = []
 
         for counter in range(len(self.data_geo)):
             dict_class = {}
@@ -416,11 +417,15 @@ class Classification:
                 dict_class[1] += 10
                 dict_class[2] += 3
 
+            if self.data_geo["DIFF CLASS"][counter] > 10:
+                dict_class[1] += 5
+
             else:
                 dict_class[2] += 10
-
+                # TODO: change else
             classification1.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
 
+        # MOVEMENT
         for counter in range(len(self.data_geo)):
             dict_class = {}
             for i in range(2, 4):
@@ -448,14 +453,30 @@ class Classification:
 
                 classification2.append(1)
 
+        # TRANSPORT
         for counter in range(len(self.data_geo)):
             dict_class = {}
-            for i in range(2, 4):
+            for i in range(5, 7):
                 dict_class[i] = 0
 
-        self.data_geo["CLASSIFICATION"] = classification2
+                # 5 = Car
+                # 6 = Public transport
+            if classification2[counter] == 2:
+
+                if self.data_geo["TRANSPORT"][counter] == "Train":
+                    dict_class[6] += 10
+                if not self.data_geo["TRANSPORT"][counter] == "Train":
+                    dict_class[5] += 10
+                classification3.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
+            else:
+                classification3.append(classification2[counter])
+
+        self.data_geo["CLASSIFICATION"] = classification3
 
 
+        # ACTIVITY
+        
+        # TODO: split this into more methods, recursive?
 
 
 
