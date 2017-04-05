@@ -19,7 +19,6 @@ class Classification:
         """
         self.diff_range = diff_range
         self.data_geo = data_geo
-        # TODO: data_geo
 
     @staticmethod
     def read_api_train(lat, lon):
@@ -475,7 +474,7 @@ class Classification:
 
 
         # ACTIVITY
-        
+        # TODO: is it necessary to split activiies? Will give worse results
         # TODO: split this into more methods, recursive?
 
 
