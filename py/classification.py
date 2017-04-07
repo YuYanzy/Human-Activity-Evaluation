@@ -404,23 +404,23 @@ class Classification:
             for i in range(1, 4):
                 dict_class[i] = 0
 
-            # 1 = Moving
-            # 2 = Stationary
+            # 1 = Stationary
+            # 2 = Moving
             # 3 = Unknown
 
             if self.data_geo["SPEED"][counter] > 5:
-                dict_class[1] += 10
-                dict_class[2] += 0
+                dict_class[2] += 10
+                dict_class[stationary] += 0
 
             if self.data_geo["SPEED"][counter] <= 5 and self.data_geo["SPEED"][counter] > 2:
-                dict_class[1] += 10
-                dict_class[2] += 3
+                dict_class[2] += 10
+                dict_class[stationary] += 3
 
             if self.data_geo["DIFF CLASS"][counter] > 10:
-                dict_class[1] += 5
+                dict_class[2] += 5
 
             else:
-                dict_class[2] += 10
+                dict_class[stationary] += 10
                 # TODO: change else
             classification1.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
 
@@ -433,7 +433,7 @@ class Classification:
                 # 2 = Transport
                 # 3 = Activity
 
-            if classification1[counter] == 1:
+            if classification1[counter] == 2:
 
                 if self.data_geo["DIFF CLASS"][counter] == 30:
                     dict_class[3] += 10
@@ -465,7 +465,7 @@ class Classification:
                 if self.data_geo["TRANSPORT"][counter] == "Train":
                     dict_class[6] += 10
                 if not self.data_geo["TRANSPORT"][counter] == "Train":
-                    dict_class[5] += 10
+                    dict_class[car] += 10
                 classification3.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
             else:
                 classification3.append(classification2[counter])
@@ -474,6 +474,16 @@ class Classification:
 
 
         # ACTIVITY
+        for counter in range(len(self.data_geo)):
+            dict_class = {}
+            for i in range(2, 5):
+                dict_class[i] = 0
+
+                # 5 = Walking
+                # 6 = Running
+                # 7 = Cycling
+
+            if classification2[counter] == 3:
         # TODO: is it necessary to split activiies? Will give worse results
         # TODO: split this into more methods, recursive?
 

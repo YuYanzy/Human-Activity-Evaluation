@@ -23,31 +23,6 @@ class PrepareData:
         self.geo_file = geo_file
         self.accelero_file = accelero_file
 
-    def readcsv(self):
-        """
-        This method is inactive, use read_accelerometer_data and read_geodata.
-        """
-        x = []
-        y = []
-        z = []
-        xyz = []
-        time = []
-        activity = []
-
-        csvfile = open(self.geo_file, "r")
-        csv_reader = csv.reader(csvfile, delimiter=",")
-        for row in csv_reader:
-            if row[0] == "ID":
-                pass
-            elif not(float(row[1]) == 0.0 and float(row[2]) == 0.0 and float(row[3]) == 0.0):
-                x.append(float(row[1]))
-                y.append(float(row[2]))
-                z.append(float(row[3]))
-                xyz.append(float(row[4]))
-                time.append(float(row[5]))
-                activity.append(row[6])
-
-        return x, y, z, xyz, time, activity
 
     def read_accelerometer_data(self):
         """

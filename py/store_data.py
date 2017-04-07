@@ -79,8 +79,6 @@ def store_accelerometer(x=X, y=Y, z=Z, activity=ACTIVITY):
 
     # TRUTH DATA
     activity = (request.args.get("activity", activity))
-
-    # TODO: fikse time? og heller konvertere ved plott?
     write_csv(x, y, z, time.time(), activity)
 
     return jsonify("ID" + ", " + str(x) + ", " + str(y) + ", " + str(z) + ", " + str((math.sqrt((x)**2+(y)**2+(z)**2))-9.81) + ", " + str(time.time()) + ", " + str(activity))
