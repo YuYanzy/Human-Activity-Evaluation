@@ -31,6 +31,7 @@ class Simulation:
         classification.public_transport()
         classification.stops()
         classification.fuzzy2()
+        classification.correlation()
         # classification.line_index()
         GeoViz.make_geojson(data_geo, filename="data/processed/output.geojson")
 

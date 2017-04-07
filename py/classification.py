@@ -398,6 +398,7 @@ class Classification:
         classification1 = []
         classification2 = []
         classification3 = []
+        classification4 = []
 
         for counter in range(len(self.data_geo)):
             dict_class = {}
@@ -412,16 +413,15 @@ class Classification:
                 dict_class[2] += 10
                 dict_class[stationary] += 0
 
-            if self.data_geo["SPEED"][counter] <= 5 and self.data_geo["SPEED"][counter] > 2:
-                dict_class[2] += 10
+            elif self.data_geo["SPEED"][counter] <= 5 and self.data_geo["SPEED"][counter] > 2:
+                dict_class[2] += 7
                 dict_class[stationary] += 3
 
-            if self.data_geo["DIFF CLASS"][counter] > 10:
+            elif self.data_geo["DIFF CLASS"][counter] > 10:
                 dict_class[2] += 5
 
             else:
                 dict_class[stationary] += 10
-                # TODO: change else
             classification1.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
 
         # MOVEMENT
@@ -463,15 +463,14 @@ class Classification:
             if classification2[counter] == 2:
 
                 if self.data_geo["TRANSPORT"][counter] == "Train":
-                    dict_class[6] += 10
+                    dict_class[public_transport] += 10
                 if not self.data_geo["TRANSPORT"][counter] == "Train":
                     dict_class[car] += 10
                 classification3.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
             else:
                 classification3.append(classification2[counter])
 
-        self.data_geo["CLASSIFICATION"] = classification3
-
+        # self.data_geo["CLASSIFICATION"] = classification3
 
         # ACTIVITY
         for counter in range(len(self.data_geo)):
@@ -479,15 +478,55 @@ class Classification:
             for i in range(2, 5):
                 dict_class[i] = 0
 
-                # 5 = Walking
-                # 6 = Running
-                # 7 = Cycling
+                # 2 = Walking
+                # 3 = Running
+                # 4 = Cycling
 
             if classification2[counter] == 3:
+                if self.data_geo["SPEED"][counter] < 8:
+                    dict_class[walking] += 10
+                    dict_class[running] += 4
+                    dict_class[cycling] += 2
+                    print(dict_class)
+                if self.data_geo["SPEED"][counter] >= 8 and self.data_geo["SPEED"][counter] < 16:
+                    dict_class[walking] += 1
+                    dict_class[running] += 9
+                    dict_class[cycling] += 6
+                # TODO: make smaller gaps to adjust the possibility
+                if self.data_geo["SPEED"][counter] >= 16:
+                    dict_class[running] += 2
+                    dict_class[cycling] += 10
+
+                if self.data_geo["DIFF CLASS"][counter] == 25:
+                    dict_class[walking] += 8
+                    dict_class[running] += 2
+                    dict_class[cycling] += 5
+                if self.data_geo["DIFF CLASS"][counter] == 30:
+                    dict_class[walking] += 2
+                    dict_class[running] += 6
+                    dict_class[cycling] += 5
+                if self.data_geo["DIFF CLASS"][counter] == -15:
+                    dict_class[cycling] += 8
+                classification4.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
+            else:
+                classification4.append(classification3[counter])
+
+        self.data_geo["CLASSIFICATION"] = classification4
+
         # TODO: is it necessary to split activiies? Will give worse results
         # TODO: split this into more methods, recursive?
 
 
+    def correlation(self):
+
+        correlation = []
+        for counter in range(len(self.data_geo)):
+            if self.data_geo["TRUE ACTIVITY NUM"][counter] == self.data_geo["CLASSIFICATION"][counter]:
+                correlation.append("True")
+            else:
+                correlation.append("False")
+
+        self.data_geo["CORRELATION"] = correlation
 
 
 if __name__ == "__main__":

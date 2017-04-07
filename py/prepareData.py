@@ -65,6 +65,10 @@ class PrepareData:
         # Magnitude
         data["mag"] = mag
 
+        # Converted activity
+        activity_num = PrepareData.convert_activity_accelero(activity)
+        data["TRUE ACTIVITY NUM"] = activity_num
+
         return x, y, z, xyz, time, readable_time, activity, activity2, data
 
     def read_geodata(self):
@@ -111,6 +115,10 @@ class PrepareData:
         angle = PrepareData.compute_angle(heading)
         data["ANGLE"] = angle
 
+        # Converted activity
+        activity_num = PrepareData.convert_activity_geo(activity)
+        data["TRUE ACTIVITY NUM"] = activity_num
+
         return lat, lon, speed, accuracy, altitude, heading, time, readable_time, activity, activity2, data
 
     @staticmethod
@@ -145,6 +153,79 @@ class PrepareData:
         magNoG = [i-mean for i in mag]
 
         return magNoG, mag
+
+    @staticmethod
+    def convert_activity_geo(activity_geo):
+        stationary = 1
+        walking = 2
+        running = 3
+        cycling = 4
+        car = 5
+        public_transport = 6
+        unknown = 10
+
+        stationary_list = [" ro ", " garderobe, "]
+        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", " ute, ", " trapper, "]
+        running_list = [" tredemolle "]
+        cycling_list = []
+        car_list = [" bil "]
+        public_transport_list = [" t-bane ", " buss ", " tog ", " tog, "]
+        # TODO: Unknown?, skitur? rema? hjemme? tf?
+
+        activity_geo_num = []
+        for activity in activity_geo:
+            if activity in stationary_list:
+                activity_geo_num.append(stationary)
+            elif activity in walking_list:
+                activity_geo_num.append(walking)
+            elif activity in running_list:
+                activity_geo_num.append(running)
+            elif activity in cycling_list:
+                activity_geo_num.append(cycling)
+            elif activity in car_list:
+                activity_geo_num.append(car)
+            elif activity in public_transport_list:
+                activity_geo_num.append(public_transport)
+            else:
+                activity_geo_num.append(unknown)
+
+        return activity_geo_num
+    @staticmethod
+    def convert_activity_accelero(activity_accelero):
+        stationary = 1
+        walking = 2
+        running = 3
+        cycling = 4
+        car = 5
+        public_transport = 6
+        unknown = 10
+
+        stationary_list = [" ro ", " garderobe, "]
+        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", " ute, ", " trapper, "]
+        running_list = [" tredemolle "]
+        cycling_list = []
+        car_list = [" bil "]
+        public_transport_list = [" t-bane ", " buss ", " tog ", " tog, "]
+        # TODO: Unknown?, skitur? rema? hjemme? tf?
+
+        activity_accelero_num = []
+        for activity in activity_accelero:
+            if activity in stationary_list:
+                activity_accelero_num.append(stationary)
+            elif activity in walking_list:
+                activity_accelero_num.append(walking)
+            elif activity in running_list:
+                activity_accelero_num.append(running)
+            elif activity in cycling_list:
+                activity_accelero_num.append(cycling)
+            elif activity in car_list:
+                activity_accelero_num.append(car)
+            elif activity in public_transport_list:
+                activity_accelero_num.append(public_transport)
+            else:
+                activity_accelero_num.append(unknown)
+
+        return activity_accelero_num
 
     def calibration(self, xyz):
         """
