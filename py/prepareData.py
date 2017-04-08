@@ -165,7 +165,7 @@ class PrepareData:
         unknown = 10
 
         stationary_list = [" ro ", " garderobe, "]
-        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", " ute, ", " trapper, "]
+        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", " ute, ", " trapper, ", " ute "]
         running_list = [" tredemolle "]
         cycling_list = []
         car_list = [" bil "]
@@ -201,7 +201,7 @@ class PrepareData:
         unknown = 10
 
         stationary_list = [" ro ", " garderobe, "]
-        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", " ute, ", " trapper, "]
+        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", " ute, ", " trapper, ", " ute "]
         running_list = [" tredemolle "]
         cycling_list = []
         car_list = [" bil "]

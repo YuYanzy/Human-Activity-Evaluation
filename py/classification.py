@@ -384,9 +384,6 @@ class Classification:
 
 
     def fuzzy2(self):
-        transport = 20
-        # stationary = 2
-
 
         stationary = 1
         walking = 2
@@ -450,7 +447,7 @@ class Classification:
                 classification2.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
             else:
 
-                classification2.append(1)
+                classification2.append(classification1[counter])
 
         # TRANSPORT
         for counter in range(len(self.data_geo)):
@@ -470,7 +467,7 @@ class Classification:
             else:
                 classification3.append(classification2[counter])
 
-        # self.data_geo["CLASSIFICATION"] = classification3
+
 
         # ACTIVITY
         for counter in range(len(self.data_geo)):
@@ -527,6 +524,36 @@ class Classification:
                 correlation.append("False")
 
         self.data_geo["CORRELATION"] = correlation
+
+    def num2text(self):
+        stationary = 1
+        walking = 2
+        running = 3
+        cycling = 4
+        car = 5
+        public_transport = 6
+        unknown = 10
+
+        activity = []
+        for counter in range(len(self.data_geo)):
+            if self.data_geo["CLASSIFICATION"][counter] == stationary:
+                activity.append("Stationary")
+            elif self.data_geo["CLASSIFICATION"][counter] == walking:
+                activity.append("Walking")
+            elif self.data_geo["CLASSIFICATION"][counter] == running:
+                activity.append("Running")
+            elif self.data_geo["CLASSIFICATION"][counter] == cycling:
+                activity.append("Cycling")
+            elif self.data_geo["CLASSIFICATION"][counter] == car:
+                activity.append("Car")
+            elif self.data_geo["CLASSIFICATION"][counter] == public_transport:
+                activity.append("Public transport")
+            else:
+                activity.append("Unknown")
+
+
+        self.data_geo["CLASSIFICATION TEXT"] = activity
+        pass    
 
 
 if __name__ == "__main__":

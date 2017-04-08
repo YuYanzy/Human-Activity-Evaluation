@@ -32,6 +32,7 @@ class Simulation:
         classification.stops()
         classification.fuzzy2()
         classification.correlation()
+        classification.num2text()
         # classification.line_index()
         GeoViz.make_geojson(data_geo, filename="data/processed/output.geojson")
 
@@ -89,8 +90,8 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    geo_file = 'data/log/03_09_geo.csv'
-    accelero_file = 'data/log/03_09_accelero.csv'
+    geo_file = 'data/log/02_04_geo.csv'
+    accelero_file = 'data/log/02_04_accelero.csv'
     sim = Simulation(geo_file, accelero_file)
     sim.classification()
     # sim.plot()
