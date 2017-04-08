@@ -483,8 +483,7 @@ class Classification:
                 if self.data_geo["SPEED"][counter] < 8:
                     dict_class[walking] += 10
                     dict_class[running] += 4
-                    dict_class[cycling] += 2
-                    print(dict_class)
+                    dict_class[cycling] += 2/
                 if self.data_geo["SPEED"][counter] >= 8 and self.data_geo["SPEED"][counter] < 16:
                     dict_class[walking] += 1
                     dict_class[running] += 9
@@ -553,7 +552,7 @@ class Classification:
 
 
         self.data_geo["CLASSIFICATION TEXT"] = activity
-        pass    
+
 
 
 if __name__ == "__main__":

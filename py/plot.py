@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 __author__ = 'eirikaa'
 
@@ -77,6 +79,44 @@ class Plot:
         # interpolatedIndexes = peakutils.interpolate(data_accelero["Time"].as_matrix(), cb, ind=indexes)
         # pplot(data_accelero["Time"].as_matrix(), cb, interpolatedIndexes)
 
+        plt.show()
+
+    @staticmethod
+    def confusion_matrix(data_geo):
+        y_actu = data_geo["TRUE ACTIVITY NUM"]
+        y_pred = data_geo["CLASSIFICATION"]
+        df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True)
+        df_conf_norm = df_confusion / df_confusion.sum(axis=1)
+        print (df_confusion)
+        print("---------------------------------------------")
+        print( )
+        # TODO: is this right?
+        return df_confusion, df_conf_norm
+
+    @staticmethod
+    def plot_confusion_matrix(df_confusion, title='Confusion matrix', cmap=plt.cm.gray_r):
+        plt.matshow(df_confusion, cmap=cmap)  # imshow
+        plt.title(title)
+        plt.colorbar()
+        tick_marks = np.arange(len(df_confusion.columns))
+        plt.xticks(tick_marks, df_confusion.columns, rotation=45)
+        plt.yticks(tick_marks, df_confusion.index)
+        # plt.tight_layout()
+        plt.ylabel(df_confusion.index.name)
+        plt.xlabel(df_confusion.columns.name)
+        plt.show()
+
+    @staticmethod
+    def plot_normm_confusion_matrix(df_confusion_norm, title='Confusion matrix', cmap=plt.cm.gray_r):
+        plt.matshow(df_confusion_norm, cmap=cmap)  # imshow
+        plt.title(title)
+        plt.colorbar()
+        tick_marks = np.arange(len(df_confusion_norm.columns))
+        plt.xticks(tick_marks, df_confusion_norm.columns, rotation=45)
+        plt.yticks(tick_marks, df_confusion_norm.index)
+        # plt.tight_layout()
+        plt.ylabel(df_confusion_norm.index.name)
+        plt.xlabel(df_confusion_norm.columns.name)
         plt.show()
 
 if __name__ == "__main__":

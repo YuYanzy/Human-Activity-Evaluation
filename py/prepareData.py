@@ -165,11 +165,11 @@ class PrepareData:
         unknown = 10
 
         stationary_list = [" ro ", " garderobe, "]
-        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", " ute, ", " trapper, ", " ute "]
+        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", "gar", " ute, ", " trapper, ", " ute ", "ute"]
         running_list = [" tredemolle "]
         cycling_list = []
         car_list = [" bil "]
-        public_transport_list = [" t-bane ", " buss ", " tog ", " tog, "]
+        public_transport_list = [" t-bane ", " buss ", " tog ", " tog, ", "tog"]
         # TODO: Unknown?, skitur? rema? hjemme? tf?
 
         activity_geo_num = []
@@ -201,11 +201,11 @@ class PrepareData:
         unknown = 10
 
         stationary_list = [" ro ", " garderobe, "]
-        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", " ute, ", " trapper, ", " ute "]
+        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", "gar", " ute, ", " trapper, ", " ute ", "ute"]
         running_list = [" tredemolle "]
         cycling_list = []
         car_list = [" bil "]
-        public_transport_list = [" t-bane ", " buss ", " tog ", " tog, "]
+        public_transport_list = [" t-bane ", " buss ", " tog ", " tog, ", "tog"]
         # TODO: Unknown?, skitur? rema? hjemme? tf?
 
         activity_accelero_num = []

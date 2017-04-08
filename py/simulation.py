@@ -33,8 +33,13 @@ class Simulation:
         classification.fuzzy2()
         classification.correlation()
         classification.num2text()
-        # classification.line_index()
+
         GeoViz.make_geojson(data_geo, filename="data/processed/output.geojson")
+        df_confusion, df_confusion_norm = Plot.confusion_matrix(data_geo)
+        Plot.plot_confusion_matrix(df_confusion)
+        Plot.plot_normm_confusion_matrix(df_confusion_norm)
+        # classification.line_index()
+
 
         ###
 
@@ -90,8 +95,8 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    geo_file = 'data/log/02_04_geo.csv'
-    accelero_file = 'data/log/02_04_accelero.csv'
+    geo_file = 'data/log/02_06_geo.csv'
+    accelero_file = 'data/log/02_06_accelero.csv'
     sim = Simulation(geo_file, accelero_file)
     sim.classification()
     # sim.plot()
