@@ -235,9 +235,49 @@ class Classification:
         self.data_geo["STOPS"] = stops
 
 
-    def bus(self):
-        pass
+    def bus(self, transport):
+        """
+        
+        :return: 
+        """
+        # TODO: Need stationary here as well
+        # TODO: maybe just stationary between car
+        # TODO: I need the ID of the possible fields
+        segment = []
+        temp_start = []
+        temp_stop = []
+        classification = []
+        for counter in range(len(self.data_geo)):
+            if transport[counter] == 5 or transport[counter] == 1:
+                segment.append(self.data_geo["ID"][counter])
+            else:
+                if len(segment) > 1:
+                    print(segment)
+                    print(min(segment))
+                    print(max(segment))
+                    print(type(int(min(segment))))
+                    for start in range(int(min(segment)), int(min(segment))+4):
+                        if self.data_geo["STOPS"][start]:
+                            temp_start.append(1)
+                    for stop in range(int(max(segment)) - 3, int(max(segment)) + 1):
+                        if self.data_geo["STOPS"][stop]:
+                            temp_stop.append(1)
 
+                    if 1 in temp_start and 1 in temp_stop:
+                        for seg in range(len(segment)):
+                            classification.append(6)
+                    else:
+                        classification.append(transport[counter])
+
+
+                classification.append(transport[counter])
+                segment = []
+                print(classification)
+                print(len(classification))
+
+        # TODO : somethin is worng here
+        # TODO: if start at busstop and stop at busstop
+        # TODO: if speed correlates with busstops
 
     def smooth_data(self):
         """
@@ -463,11 +503,13 @@ class Classification:
                     dict_class[public_transport] += 10
                 if not self.data_geo["TRANSPORT"][counter] == "Train":
                     dict_class[car] += 10
+
+
                 classification3.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
             else:
                 classification3.append(classification2[counter])
 
-
+        self.bus(classification3)
 
         # ACTIVITY
         for counter in range(len(self.data_geo)):
@@ -483,7 +525,7 @@ class Classification:
                 if self.data_geo["SPEED"][counter] < 8:
                     dict_class[walking] += 10
                     dict_class[running] += 4
-                    dict_class[cycling] += 2/
+                    dict_class[cycling] += 2
                 if self.data_geo["SPEED"][counter] >= 8 and self.data_geo["SPEED"][counter] < 16:
                     dict_class[walking] += 1
                     dict_class[running] += 9

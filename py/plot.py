@@ -85,11 +85,11 @@ class Plot:
     def confusion_matrix(data_geo):
         y_actu = data_geo["TRUE ACTIVITY NUM"]
         y_pred = data_geo["CLASSIFICATION"]
-        df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True)
-        df_conf_norm = df_confusion / df_confusion.sum(axis=1)
-        print (df_confusion)
-        print("---------------------------------------------")
-        print( )
+        df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])#, margins=True)
+        df_conf_norm = df_confusion / df_confusion.sum(axis = 1)
+        print (pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True))
+        print("---------------------------------------------------")
+        print(df_conf_norm)
         # TODO: is this right?
         return df_confusion, df_conf_norm
 
