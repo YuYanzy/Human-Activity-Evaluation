@@ -237,7 +237,7 @@ class Classification:
 
     def bus(self, transport):
         """
-        
+        if start at busstop and stop at busstop
         :return: 
         """
         # TODO: Need stationary here as well
@@ -248,36 +248,49 @@ class Classification:
         temp_stop = []
         classification = []
         for counter in range(len(self.data_geo)):
+            print(counter)
             if transport[counter] == 5 or transport[counter] == 1:
                 segment.append(self.data_geo["ID"][counter])
-            else:
-                if len(segment) > 1:
-                    print(segment)
-                    print(min(segment))
-                    print(max(segment))
-                    print(type(int(min(segment))))
-                    for start in range(int(min(segment)), int(min(segment))+4):
-                        if self.data_geo["STOPS"][start]:
-                            temp_start.append(1)
-                    for stop in range(int(max(segment)) - 3, int(max(segment)) + 1):
-                        if self.data_geo["STOPS"][stop]:
-                            temp_stop.append(1)
+            elif len(segment) > 1:
+            # if len(segment) > 1:
+                print(segment)
+                print(min(segment))
+                print(max(segment))
+                print(int(max(segment))- int(min(segment)))
+                print(type(int(min(segment))))
+                #TODO: this dont match with small segments
 
-                    if 1 in temp_start and 1 in temp_stop:
-                        for seg in range(len(segment)):
-                            classification.append(6)
-                    else:
-                        classification.append(transport[counter])
+                for start in range(int(min(segment)), int(min(segment))+4):
+                    if self.data_geo["STOPS"][start]:
+                        temp_start.append(1)
+                for stop in range(int(max(segment)) - 3, int(max(segment)) + 1):
+                    if self.data_geo["STOPS"][stop]:
+                        temp_stop.append(1)
 
+                if 1 in temp_start and 1 in temp_stop:
+                    print("true")
+                    for seg in range(len(segment)):
+                        classification.append(6)
+                else:
+
+                    for seg in range(int(min(segment)), int(max(segment))+1):
+                        classification.append(transport[seg])
 
                 classification.append(transport[counter])
                 segment = []
-                print(classification)
-                print(len(classification))
 
-        # TODO : somethin is worng here
-        # TODO: if start at busstop and stop at busstop
+            else:
+                if len(segment) == 1:
+                    classification.append(transport[counter-1])
+
+                classification.append(transport[counter])
+                segment = []
+            print(classification)
+            print(len(classification))
+
+
         # TODO: if speed correlates with busstops
+        return classification
 
     def smooth_data(self):
         """
@@ -509,7 +522,16 @@ class Classification:
             else:
                 classification3.append(classification2[counter])
 
-        self.bus(classification3)
+        print(len(classification3))
+        bus = self.bus(classification3)
+        print(len(bus))
+        classification3 = bus
+        # TODO: why?
+        # try:
+        #     self.data_geo["CLASSIFICATION"] = classification3
+        # except ValueError:
+        #     classification3.append(10)
+        #     self.data_geo["CLASSIFICATION"] = classification3
 
         # ACTIVITY
         for counter in range(len(self.data_geo)):
