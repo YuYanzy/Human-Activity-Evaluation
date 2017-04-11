@@ -249,9 +249,12 @@ class Classification:
         classification = []
         for counter in range(len(self.data_geo)):
             print(counter)
-            if counter < len(self.data_geo):
-                if transport[counter] == 5 or transport[counter] == 1:
-                    segment.append(self.data_geo["ID"][counter])
+            if counter == len(self.data_geo):
+                for i in range(len(segment)):
+                    classification.append(i)
+            # TODO: if sements end on 1 or 5, i have problem now
+            if transport[counter] == 5 or transport[counter] == 1:
+                segment.append(self.data_geo["ID"][counter])
             elif len(segment) > 1:
             # if len(segment) > 1:
                 print(segment)
