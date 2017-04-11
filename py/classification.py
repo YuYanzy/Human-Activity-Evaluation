@@ -249,7 +249,8 @@ class Classification:
         classification = []
         for counter in range(len(self.data_geo)):
             print(counter)
-            if counter == len(self.data_geo):
+            if counter == len(self.data_geo)-1:
+
                 for i in range(len(segment)):
                     classification.append(i)
             # TODO: if sements end on 1 or 5, i have problem now
