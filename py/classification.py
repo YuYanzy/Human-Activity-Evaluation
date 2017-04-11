@@ -249,8 +249,9 @@ class Classification:
         classification = []
         for counter in range(len(self.data_geo)):
             print(counter)
-            if transport[counter] == 5 or transport[counter] == 1:
-                segment.append(self.data_geo["ID"][counter])
+            if counter < len(self.data_geo):
+                if transport[counter] == 5 or transport[counter] == 1:
+                    segment.append(self.data_geo["ID"][counter])
             elif len(segment) > 1:
             # if len(segment) > 1:
                 print(segment)
@@ -272,7 +273,6 @@ class Classification:
                     for seg in range(len(segment)):
                         classification.append(6)
                 else:
-
                     for seg in range(int(min(segment)), int(max(segment))+1):
                         classification.append(transport[seg])
 
@@ -522,9 +522,16 @@ class Classification:
             else:
                 classification3.append(classification2[counter])
 
-        print(len(classification3))
         bus = self.bus(classification3)
+        print("len(classification3")
+        print(len(classification3))
+        print("classification3")
+        print(classification3)
+
+        print("len(bus")
         print(len(bus))
+        print("bus")
+        print(bus)
         classification3 = bus
         # TODO: why?
         # try:
