@@ -4,7 +4,10 @@ import requests
 import json
 import math
 import operator
-
+import sys
+sys.path.append('D:/Skole/master/github/dataCapture/py/PostGIS_queries')
+import station
+import tog
 __author__ = 'eirikaa'
 
 
@@ -29,9 +32,11 @@ class Classification:
         :return:
         """
 
-        req = requests.get('http://188.166.168.99/tog/?lon=' + str(lon) + '&lat=' + str(lat))
-        req = req.content.decode(req.apparent_encoding)
-        req = json.loads(req)
+        # req = requests.get('http://188.166.168.99/tog/?lon=' + str(lon) + '&lat=' + str(lat))
+        # req = req.content.decode(req.apparent_encoding)
+        # req = json.loads(req)
+        # return req
+        req = tog.buss(lon,lat)
         return req
 
     @staticmethod
@@ -42,10 +47,15 @@ class Classification:
         :param lon:
         :return:
         """
-        req = requests.get('http://188.166.168.99/buss/?lon=' + str(lon) + '&lat=' + str(lat))
-        req = req.content.decode(req.apparent_encoding)
-        req = json.loads(req)
+        # req = requests.get('http://188.166.168.99/buss/?lon=' + str(lon) + '&lat=' + str(lat))
+        # req = req.content.decode(req.apparent_encoding)
+        # req = json.loads(req)
+        # return req
+
+        req = station.sql(lon,lat)
         return req
+
+
 
     def diff_maxmin(self, xyz):
         """
@@ -305,30 +315,32 @@ class Classification:
             # TODO: make a rule to check if the segment is at least 5 elements?
 
             if counter == len(self.data_geo)-1:
-                if len(segment) > 6:
+                if len(segment) == 0:
+                    break
+                elif len(segment) > 6:
                     print ("Finish the bus method")
+                    for start in range(int(min(segment)), int(min(segment))+4):
+                        if self.data_geo["STOPS"][start]:
+                            temp_start.append(1)
+
+                    for stop in range(int(max(segment)) - 3, int(max(segment)) + 1):
+                        if self.data_geo["STOPS"][stop]:
+                            temp_stop.append(1)
+
+
+                    if 1 in temp_start and 1 in temp_stop:
+                        print("true")
+                        for seg in range(len(segment)):
+                            classification.append(6)
+
+                    else:
+                        for i in range(int(min(segment)), int(max(segment)) + 1):
+                            classification.append(transport[i])
 
                 else:
                     for i in range(int(min(segment)), int(max(segment))+1):
                         classification.append(transport[i])
 
-            #     for start in range(int(min(segment)), int(min(segment))+4):
-            #         print(start)
-            #         if self.data_geo["STOPS"][start]:
-            #             temp_start.append(1)
-            #         print(temp_start)
-            #     for stop in range(int(max(segment)) - 4, int(max(segment))):
-            #         print(stop)
-            #         if self.data_geo["STOPS"][stop]:
-            #             temp_stop.append(1)
-            #         print (temp_stop)
-            #     if 1 in temp_start and 1 in temp_stop:
-            #         print("true")
-            #         for seg in range(len(segment)):
-            #             classification.append(6)
-            #     else:
-            #         for seg in range(int(min(segment)), int(max(segment))+1):
-            #             classification.append(transport[seg])
 
             print(classification)
             print(len(classification))

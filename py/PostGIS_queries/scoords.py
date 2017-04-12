@@ -31,4 +31,4 @@ select x, y, navn from index_query order by distance limit 5
     return (rows)
 
 if __name__ == "__main__":
-    print(scoordsql(10,59))
+    pass

@@ -5,6 +5,7 @@ LAT = 59.662123
 
 
 def buss(lon=LON, lat=LAT):
+    lat = lat
     lon = lon
 
     try:
@@ -30,4 +31,4 @@ select distance, t, type from index_query order by distance limit 1
     return (rows[0])
 
 if __name__ == "__main__":
-    print(buss(10,59))
+    pass

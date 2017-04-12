@@ -17,17 +17,17 @@ def sql(lon=LON, lat=LAT):
     select ST_Distance(
     geom ::geography,
     ST_POINT({}, {}) ::geography) as distance,
-    ST_DWithin(st_buffer(geom ::geography, 10), ST_POINT({}, {})  ::geography, 10) as t, type as type 
+    ST_DWithin(st_buffer(geom ::geography, 10), ST_POINT({}, {})  ::geography, 10) as t, type as type, gid as id
     from n50.stasjoner
         order by geom <-> ST_POINT({}, {}) limit 100
 )
-select distance, t, type from index_query order by distance limit 1
+select distance, id, t, type from index_query order by distance limit 1
 """).format(lon, lat, lon, lat, lon, lat)
 
     cursor = conn.cursor()
     cursor.execute(sql)
     rows = cursor.fetchall()
-    return (rows[0])
+    return rows[0]
 
 if __name__ == "__main__":
-    print(sql(10,59))
+    pass
