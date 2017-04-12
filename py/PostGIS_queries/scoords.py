@@ -1,18 +1,15 @@
-from FlaskApp import app
 import psycopg2
-from flask.ext.jsonpify import jsonify
-from flask import request
 
 LON = 10.787869
 LAT = 59.662123
 
-@app.route('/scoords/')
 def scoordsql(lon=LON, lat=LAT):
-    lon = float((request.args.get('lon', lon)))
-    lat = float((request.args.get('lat', lat)))
+
+    lat = lat
+    lon = lon
 
     try:
-        conn = psycopg2.connect(dbname='r2o', user='johu',
+        conn = psycopg2.connect(dbname='master', user='postgres',
         password='', host='localhost', port=5432)
     except ValueError:
         print('database ikke tilkoblet')
@@ -31,4 +28,7 @@ select x, y, navn from index_query order by distance limit 5
     cursor = conn.cursor()
     cursor.execute(sql)
     rows = cursor.fetchall()
-    return jsonify(rows)
+    return (rows)
+
+if __name__ == "__main__":
+    print(scoordsql(10,59))

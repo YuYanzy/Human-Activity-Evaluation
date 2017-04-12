@@ -1,18 +1,14 @@
-from FlaskApp import app
 import psycopg2
-from flask.ext.jsonpify import jsonify
-from flask import request
 
 LON = 10.787869
 LAT = 59.662123
 
-@app.route('/buss/')
 def sql(lon=LON, lat=LAT):
-    lon = float((request.args.get('lon', lon)))
-    lat = float((request.args.get('lat', lat)))
+    lon = lon
+    lat = lat
 
     try:
-        conn = psycopg2.connect(dbname='r2o', user='johu',
+        conn = psycopg2.connect(dbname='master', user='postgres',
         password='', host='localhost', port=5432)
     except ValueError:
         print('database ikke tilkoblet')
@@ -31,4 +27,7 @@ select distance, t, type from index_query order by distance limit 1
     cursor = conn.cursor()
     cursor.execute(sql)
     rows = cursor.fetchall()
-    return jsonify(rows[0])
+    return (rows[0])
+
+if __name__ == "__main__":
+    print(sql(10,59))

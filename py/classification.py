@@ -215,11 +215,10 @@ class Classification:
         for i in range(len(self.data_geo)):
             if Classification.read_api_train(self.data_geo["LAT"][i], self.data_geo["LON"][i])[1]:
                 activity.append("Train")
+                print(i,activity)
             else:
                 activity.append("Not train")
-            # TODO: remove the elifs and else:
-            # TODO: make a method where all paramters is combined.
-
+                print(i, activity)
         self.data_geo["TRANSPORT"] = activity
 
     def stops(self):
@@ -232,27 +231,31 @@ class Classification:
         for i in range(len(self.data_geo)):
             temp = (Classification.read_api_bus(self.data_geo["LAT"][i], self.data_geo["LON"][i]))
             stops.append(temp[2])
+            print(i, temp)
         self.data_geo["STOPS"] = stops
 
 
     def bus(self, transport):
         """
-        if start at busstop and stop at busstop
-        :return: 
+        A segment will contains values of 5 or 1 which mean car or moving. If one of the first 4 elements and the
+        last 4 element from the segments correlates with busstop the segment wil be classified as 
+        bus/public trasport
+         
+        :param: transport, classification which contains transport, activity and stationary
+        :return: classification, classification list which classifies transport into bus trips
         """
-        # TODO: Need stationary here as well
         # TODO: maybe just stationary between car
-        # TODO: I need the ID of the possible fields
+        # TODO: 02_18 example, the first two elements is a segment and for loops for checking stops dont work
         segment = []
         temp_start = []
         temp_stop = []
         classification = []
         for counter in range(len(self.data_geo)):
             print(counter)
-            if counter == len(self.data_geo)-1:
-
-                for i in range(len(segment)):
-                    classification.append(i)
+            # if counter == len(self.data_geo)-1:
+            #
+            #     for i in range(len(segment)):
+            #         classification.append(i)
             # TODO: if sements end on 1 or 5, i have problem now
             if transport[counter] == 5 or transport[counter] == 1:
                 segment.append(self.data_geo["ID"][counter])
@@ -268,20 +271,28 @@ class Classification:
                 for start in range(int(min(segment)), int(min(segment))+4):
                     if self.data_geo["STOPS"][start]:
                         temp_start.append(1)
-                for stop in range(int(max(segment)) - 3, int(max(segment)) + 1):
-                    if self.data_geo["STOPS"][stop]:
-                        temp_stop.append(1)
+                if (int(max(segment)) - 3) >= 0:
+                    for stop in range(int(max(segment)) - 3, int(max(segment)) + 1):
+                        if self.data_geo["STOPS"][stop]:
+                            temp_stop.append(1)
+                else:
+                    temp_stop.append(0)
 
                 if 1 in temp_start and 1 in temp_stop:
                     print("true")
                     for seg in range(len(segment)):
                         classification.append(6)
+
+
                 else:
                     for seg in range(int(min(segment)), int(max(segment))+1):
                         classification.append(transport[seg])
 
+
                 classification.append(transport[counter])
                 segment = []
+                temp_stop = []
+                temp_start = []
 
             else:
                 if len(segment) == 1:
@@ -289,10 +300,38 @@ class Classification:
 
                 classification.append(transport[counter])
                 segment = []
+
+            # TODO this is bad
+            # TODO: make a rule to check if the segment is at least 5 elements?
+
+            if counter == len(self.data_geo)-1:
+                if len(segment) > 6:
+                    print ("Finish the bus method")
+
+                else:
+                    for i in range(int(min(segment)), int(max(segment))+1):
+                        classification.append(transport[i])
+
+            #     for start in range(int(min(segment)), int(min(segment))+4):
+            #         print(start)
+            #         if self.data_geo["STOPS"][start]:
+            #             temp_start.append(1)
+            #         print(temp_start)
+            #     for stop in range(int(max(segment)) - 4, int(max(segment))):
+            #         print(stop)
+            #         if self.data_geo["STOPS"][stop]:
+            #             temp_stop.append(1)
+            #         print (temp_stop)
+            #     if 1 in temp_start and 1 in temp_stop:
+            #         print("true")
+            #         for seg in range(len(segment)):
+            #             classification.append(6)
+            #     else:
+            #         for seg in range(int(min(segment)), int(max(segment))+1):
+            #             classification.append(transport[seg])
+
             print(classification)
             print(len(classification))
-
-
         # TODO: if speed correlates with busstops
         return classification
 
@@ -473,6 +512,7 @@ class Classification:
 
             elif self.data_geo["DIFF CLASS"][counter] > 10:
                 dict_class[2] += 5
+
 
             else:
                 dict_class[stationary] += 10
