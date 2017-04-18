@@ -36,7 +36,7 @@ class Classification:
         # req = req.content.decode(req.apparent_encoding)
         # req = json.loads(req)
         # return req
-        req = tog.buss(lon,lat)
+        req = tog.buss(lon, lat)
         return req
 
     @staticmethod
@@ -52,10 +52,8 @@ class Classification:
         # req = json.loads(req)
         # return req
 
-        req = station.sql(lon,lat)
+        req = station.sql(lon, lat)
         return req
-
-
 
     def diff_maxmin(self, xyz):
         """
@@ -81,8 +79,6 @@ class Classification:
             diff_xyz.append((max(abs(xyz[value:value + self.diff_range]))) - (
                 (sum(xyz[value:value + self.diff_range])) / self.diff_range))
         return diff_xyz
-
-
 
     def diff_sum(self, xyz):
         """
@@ -214,7 +210,6 @@ class Classification:
 
         self.data_geo["DIFF CLASS"] = diff_list
 
-
     def public_transport(self):
         """
 
@@ -225,7 +220,7 @@ class Classification:
         for i in range(len(self.data_geo)):
             if Classification.read_api_train(self.data_geo["LAT"][i], self.data_geo["LON"][i])[1]:
                 activity.append("Train")
-                print(i,activity)
+                print(i, activity)
             else:
                 activity.append("Not train")
                 print(i, activity)
@@ -244,7 +239,6 @@ class Classification:
             print(i, temp)
         self.data_geo["STOPS"] = stops
 
-
     def bus(self, transport):
         """
         A segment will contains values of 5 or 1 which mean car or moving. If one of the first 4 elements and the
@@ -256,6 +250,7 @@ class Classification:
         """
         # TODO: maybe just stationary between car
         # TODO: 02_18 example, the first two elements is a segment and for loops for checking stops dont work
+        # tODO need some kind of smoothing, misclassified points breaks this
         segment = []
         temp_start = []
         temp_stop = []
@@ -267,16 +262,16 @@ class Classification:
             #     for i in range(len(segment)):
             #         classification.append(i)
             # TODO: if sements end on 1 or 5, i have problem now
-            if transport[counter] == 5 or transport[counter] == 1:
+            if transport[counter] == 5 or transport[counter] == 1 or transport[counter] == 6:
                 segment.append(self.data_geo["ID"][counter])
             elif len(segment) > 1:
-            # if len(segment) > 1:
+                # if len(segment) > 1:
                 print(segment)
                 print(min(segment))
                 print(max(segment))
-                print(int(max(segment))- int(min(segment)))
+                print(int(max(segment)) - int(min(segment)))
                 print(type(int(min(segment))))
-                #TODO: this dont match with small segments
+                # TODO: this dont match with small segments
 
                 for start in range(int(min(segment)), int(min(segment))+4):
                     if self.data_geo["STOPS"][start]:
@@ -293,11 +288,9 @@ class Classification:
                     for seg in range(len(segment)):
                         classification.append(6)
 
-
                 else:
                     for seg in range(int(min(segment)), int(max(segment))+1):
                         classification.append(transport[seg])
-
 
                 classification.append(transport[counter])
                 segment = []
@@ -318,7 +311,7 @@ class Classification:
                 if len(segment) == 0:
                     break
                 elif len(segment) > 6:
-                    print ("Finish the bus method")
+                    print("Finish the bus method")
                     for start in range(int(min(segment)), int(min(segment))+4):
                         if self.data_geo["STOPS"][start]:
                             temp_start.append(1)
@@ -326,7 +319,6 @@ class Classification:
                     for stop in range(int(max(segment)) - 3, int(max(segment)) + 1):
                         if self.data_geo["STOPS"][stop]:
                             temp_stop.append(1)
-
 
                     if 1 in temp_start and 1 in temp_stop:
                         print("true")
@@ -340,7 +332,6 @@ class Classification:
                 else:
                     for i in range(int(min(segment)), int(max(segment))+1):
                         classification.append(transport[i])
-
 
             print(classification)
             print(len(classification))
@@ -366,14 +357,14 @@ class Classification:
         """
         # TODO: make new indexes for lines
         line_index = []
-        id = 0
+        line_id = 0
         for i in range(len(self.data_geo)-1):
             if (self.data_geo["DIFF CLASS"][i]) == (self.data_geo["DIFF CLASS"][i+1]):
-                line_index.append(id)
+                line_index.append(line_id)
             else:
-                line_index.append(id)
-                id += 1
-        line_index.append(id)
+                line_index.append(line_id)
+                line_id += 1
+        line_index.append(line_id)
         print(len(line_index))
         print(len(self.data_geo))
         print(line_index)
@@ -386,7 +377,6 @@ class Classification:
     def fuzzy(self):
         transport = 20
         # stationary = 2
-
 
         stationary = 1
         walking = 2
@@ -401,7 +391,7 @@ class Classification:
             a = ""
 
             dict_class = {}
-            for i in range(1,7):
+            for i in range(1, 7):
                 dict_class[i] = 0
 
             if self.data_geo["SPEED"][counter] >= transport:
@@ -422,7 +412,7 @@ class Classification:
                 dict_class[public_transport] += 0.3
                 dict_class[car] += 0.2
 
-            if  self.data_geo["SPEED"][counter] < 3:
+            if self.data_geo["SPEED"][counter] < 3:
                 a = a + "Most likely walking or stationary, Possibly cycling or running "
                 dict_class[stationary] += 0.8
                 dict_class[walking] += 0.3
@@ -478,7 +468,6 @@ class Classification:
             if not self.data_geo["TIME DIFF"][counter] > 4:
                 a = a + "Probably moving "
 
-
             if self.data_geo["TRANSPORT"][counter] == "Train":
                 dict_class[public_transport] += 0.9
 
@@ -489,7 +478,6 @@ class Classification:
             classification.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
 
         self.data_geo["CLASSIFICATION"] = classification
-
 
     def fuzzy2(self):
 
@@ -524,7 +512,6 @@ class Classification:
 
             elif self.data_geo["DIFF CLASS"][counter] > 10:
                 dict_class[2] += 5
-
 
             else:
                 dict_class[stationary] += 10
@@ -572,7 +559,6 @@ class Classification:
                     dict_class[public_transport] += 10
                 if not self.data_geo["TRANSPORT"][counter] == "Train":
                     dict_class[car] += 10
-
 
                 classification3.append(max(dict_class.items(), key=operator.itemgetter(1))[0])
             else:
@@ -639,7 +625,6 @@ class Classification:
         # TODO: is it necessary to split activiies? Will give worse results
         # TODO: split this into more methods, recursive?
 
-
     def correlation(self):
 
         correlation = []
@@ -677,10 +662,7 @@ class Classification:
             else:
                 activity.append("Unknown")
 
-
         self.data_geo["CLASSIFICATION TEXT"] = activity
-
-
 
 if __name__ == "__main__":
     pass

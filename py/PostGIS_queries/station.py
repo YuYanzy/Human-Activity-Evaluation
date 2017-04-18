@@ -24,10 +24,22 @@ def sql(lon=LON, lat=LAT):
 select distance, id, t, type from index_query order by distance limit 1
 """).format(lon, lat, lon, lat, lon, lat)
 
+    sql2 = ("""with index_query as (
+    select ST_Distance(
+    wkb_geometry ::geography,
+    ST_POINT({}, {}) ::geography) as distance,
+    ST_DWithin(st_buffer(wkb_geometry ::geography, 10), ST_POINT({}, {})  ::geography, 10) as t, bus as type, ogc_fid as id
+    from n50.stasjoner2
+        order by wkb_geometry <-> ST_POINT({}, {}) limit 100
+)
+select distance, id, t, type from index_query order by distance limit 1
+""").format(lon, lat, lon, lat, lon, lat)
+
     cursor = conn.cursor()
-    cursor.execute(sql)
+    cursor.execute(sql2)
     rows = cursor.fetchall()
     return rows[0]
 
 if __name__ == "__main__":
+    # print(sql(10,59))
     pass
