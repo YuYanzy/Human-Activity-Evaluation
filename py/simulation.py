@@ -22,6 +22,7 @@ class Simulation:
 
         x, y, z, xyz, time_accelero, readable_time_accelero, activity, activity2, data_accelero = prep.read_accelerometer_data()
         lat, lon, speed, accuracy, altitude, heading, time_geo, readable_time_geo, activity, activity2, data_geo = prep.read_geodata()
+
         classification = Classification(diff_range=10, data_geo=data_geo)
 
         ### OPTIONAL METHODS
@@ -34,17 +35,24 @@ class Simulation:
         classification.correlation()
         classification.num2text()
 
+        # GeoJSON
         GeoViz.make_geojson(data_geo, filename="data/processed/output.geojson")
-        df_confusion, df_confusion_norm = Plot.confusion_matrix(data_geo)
+
+        # Plot
         clean_diff_class = []
         for i in diff_class:
             clean_diff_class.append(i[0])
         print(clean_diff_class)
         Plot.plot_xyz(x, y, z, xyz, readable_time_accelero, clean_diff_class, speed, time_geo)
+
+        #Confusion Matrix
+        df_confusion, df_confusion_norm = Plot.confusion_matrix(data_geo)
         Plot.plot_confusion_matrix(df_confusion)
         Plot.plot_normm_confusion_matrix(df_confusion_norm)
         # classification.line_index()
 
+        # For Latex
+        print(data_geo.to_latex(index=False))
 
         ###
 
@@ -100,9 +108,9 @@ class Simulation:
 
 if __name__ == "__main__":
 
-    geo_file = 'data/log/02_14_geo.csv'
-    accelero_file = 'data/log/02_14_accelero.csv'
+    geo_file = 'data/log/03_09_geo.csv'
+    accelero_file = 'data/log/03_09_accelero.csv'
     sim = Simulation(geo_file, accelero_file)
-    sim.classification()
-    # sim.plot()
+    # sim.classification()
+    sim.plot()
     # sim.viz()

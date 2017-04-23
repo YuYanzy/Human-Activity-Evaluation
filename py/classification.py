@@ -564,6 +564,7 @@ class Classification:
             else:
                 classification3.append(classification2[counter])
 
+        # TODO: Flytte denne over segmentet over her?
         bus = self.bus(classification3)
         print("len(classification3")
         print(len(classification3))

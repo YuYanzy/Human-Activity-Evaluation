@@ -39,8 +39,6 @@ class PrepareData:
         activity = data["Activity"]
         activity2 = data["Activity2"]
 
-        # TODO: if x and y and z = 0, not necesarry anymore?
-        # TODO: xyz - mean, instead of xyz - g
         # New ID field
         id = [index for index in range(len(data))]
         data['ID'] = id
@@ -99,9 +97,9 @@ class PrepareData:
 
         # Readable time
         readable_time = []
-        for utc in time:
+        for unix in time:
             # String for conversion to geojson
-            readable_time.append(str(datetime.datetime.fromtimestamp(utc)))
+            readable_time.append(str(datetime.datetime.fromtimestamp(unix)))
         data["HUMAN TIME"] = readable_time
 
         # Time diff
