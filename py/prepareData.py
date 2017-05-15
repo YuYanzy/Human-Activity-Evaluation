@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import csv
 import pandas as pd
 import datetime
 import math
@@ -162,8 +161,8 @@ class PrepareData:
         public_transport = 6
         unknown = 10
 
-        stationary_list = [" ro ", " garderobe, "]
-        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", "gar", " ute, ", " trapper, ", " ute ", "ute"]
+        stationary_list = [" ro ", " garderobe, ", "inne", "inne "]
+        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", "gar", " ute, ", " trapper, ", " ute ", "ute","tf", "tf ", " tf ", " tf", "tf,"]
         running_list = [" tredemolle "]
         cycling_list = []
         car_list = [" bil "]
@@ -198,8 +197,8 @@ class PrepareData:
         public_transport = 6
         unknown = 10
 
-        stationary_list = [" ro ", " garderobe, "]
-        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", "gar", " ute, ", " trapper, ", " ute ", "ute"]
+        stationary_list = [" ro ", " garderobe, ", "inne", "inne "]
+        walking_list = [" aktivitet ", " sktivitet ", " gar ", " gar, ", "gar", " ute, ", " trapper, ", " ute ", "ute", "tf", "tf ", " tf ", " tf", "tf,"]
         running_list = [" tredemolle "]
         cycling_list = []
         car_list = [" bil "]

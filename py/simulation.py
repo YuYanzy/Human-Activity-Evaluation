@@ -26,7 +26,7 @@ class Simulation:
         classification = Classification(diff_range=10, data_geo=data_geo)
 
         ### OPTIONAL METHODS
-        diff_xyz = classification.diff_maxmin(xyz)
+        diff_xyz = classification.diff_avg(xyz)
         diff_class = classification.differentiate(diff_xyz, xyz, time_accelero, hard_activity_threshold=13, activity_threshold=4)
         classification.classify_accelero(diff_class, time_geo, data_accelero)
         classification.public_transport()
@@ -35,24 +35,35 @@ class Simulation:
         classification.correlation()
         classification.num2text()
 
+
         # GeoJSON
         GeoViz.make_geojson(data_geo, filename="data/processed/output.geojson")
 
-        # Plot
-        clean_diff_class = []
-        for i in diff_class:
-            clean_diff_class.append(i[0])
-        print(clean_diff_class)
-        Plot.plot_xyz(x, y, z, xyz, readable_time_accelero, clean_diff_class, speed, time_geo)
+        ### Plot
+        # clean_diff_class = []
+        # for i in diff_class:
+        #     clean_diff_class.append(i[0])
+        # print(clean_diff_class)
+        # Plot.plot_xyz(x, y, z, xyz, readable_time_accelero, clean_diff_class, speed, time_geo)
 
-        #Confusion Matrix
+        ### Confusion Matrix
         df_confusion, df_confusion_norm = Plot.confusion_matrix(data_geo)
+        # Total Correlation
+        counter = 0
+        for value in range(len(data_geo)):
+            if data_geo["CORRELATION"][value] == "True":
+                counter += 1
+
+        tot_correlation = counter / len(data_geo)
+        print('-------------------------')
+        print(tot_correlation * 100)
         Plot.plot_confusion_matrix(df_confusion)
         Plot.plot_normm_confusion_matrix(df_confusion_norm)
+
         # classification.line_index()
 
-        # For Latex
-        print(data_geo.to_latex(index=False))
+        ## For Latex
+        # print(data_geo.to_latex(index=False))
 
         ###
 
@@ -65,8 +76,8 @@ class Simulation:
         lat, lon, speed, accuracy, altitude, heading, time_geo, readable_time_geo, activity, activity2, data_geo = prep.read_geodata()
 
         # diff_xyz = ana.diff_maxmin(x, y, z, xyz)
-        diff_xyz = classification.diff_avg(xyz)
-        diff_class = classification.differentiate(diff_xyz, xyz, time)
+        diff_xyz = classification.diff_maxmin(xyz)
+        diff_class = classification.differentiate(diff_xyz, xyz, time, hard_activity_threshold=13, activity_threshold=4)
 
         print(prep.calibration(xyz))
 
@@ -109,7 +120,7 @@ class Simulation:
 if __name__ == "__main__":
 
     geo_file = 'data/log/03_09_geo.csv'
-    accelero_file = 'data/log/03_09_accelero.csv'
+    accelero_file = 'data/calibration/calibration_x_accelero.csv'
     sim = Simulation(geo_file, accelero_file)
     # sim.classification()
     sim.plot()

@@ -4,7 +4,7 @@ LON = 10.787869
 LAT = 59.662123
 
 
-def buss(lon=LON, lat=LAT):
+def jernbane(lon=LON, lat=LAT):
     lat = lat
     lon = lon
 

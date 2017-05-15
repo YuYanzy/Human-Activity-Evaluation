@@ -3,7 +3,7 @@ import psycopg2
 LON = 10.787869
 LAT = 59.662123
 
-def sql(lon=LON, lat=LAT):
+def stasjoner(lon=LON, lat=LAT):
     lon = lon
     lat = lat
 

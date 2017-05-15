@@ -87,10 +87,29 @@ class Plot:
         y_pred = data_geo["CLASSIFICATION"]
         df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'])#, margins=True)
         df_conf_norm = df_confusion / df_confusion.sum(axis = 1)
-        print (pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True))
+        print (pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True).to_latex())
         print("---------------------------------------------------")
-        print(df_conf_norm)
-        # TODO: is this right?
+        print(df_conf_norm.to_latex())
+
+
+
+        print("---------------------------------------------------")
+        from sklearn.metrics import confusion_matrix
+        cm = (confusion_matrix(data_geo["TRUE ACTIVITY NUM"], data_geo["CLASSIFICATION"]))
+        print (cm)
+        print("---------------------------------------------------")
+        cm_norm = cm.astype('float') / cm.sum(axis=1)[:,np.newaxis]
+        print(cm_norm)
+        print("---------------------------------------------------")
+
+        from pandas_ml import ConfusionMatrix
+        cm_panda = ConfusionMatrix(data_geo["TRUE ACTIVITY NUM"], data_geo["CLASSIFICATION"])
+        print(cm_panda)
+        print("---------------------------------------------------")
+
+        # cm_panda.plot(normalized=True)
+        cm_panda.print_stats()
+
         return df_confusion, df_conf_norm
 
     @staticmethod

@@ -11,11 +11,9 @@ import {
     DeviceEventEmitter  //react-native-sensor-manager
 } from 'react-native';
 
-
 // Sensor manager
 // var sensorManager = require("NativeModules").SensorManager;
 import { SensorManager } from 'NativeModules';
-
 
 export default class masApp extends Component {
     constructor(props) {
@@ -58,7 +56,6 @@ export default class masApp extends Component {
                 // var altitudeAccuracy = position.coords.altitudeAccuracy;
                 var heading = position.coords.heading;
 
-
                 this.setState({
                     lat: lat,
                     lon: lon,
@@ -72,8 +69,6 @@ export default class masApp extends Component {
             },
             (error) => alert(JSON.stringify(error)),
             {enableHighAccuracy: true, timeout: 0, maximumAge: 1000, distanceFilter:4}
-            //FIXME: setintervall?
-            //FIXME: distancefilter
         );
 
         SensorManager.startAccelerometer(300); // Start the accelerometer with a minimum delay of 300 ms between events
@@ -91,43 +86,6 @@ export default class masApp extends Component {
             this.fetchAccelerometer(this.state.x, this.state.y, this.state.z, this.state.activity);
         }.bind(this));
 
-
-/*
-        SensorManager.startGyroscope(300);
-        DeviceEventEmitter.addListener("Gyroscope", function (data) {
-            var xg = data.x;
-            var yg = data.y;
-            var zg = data.z;
-
-            this.setState({
-                xg: xg,
-                yg: yg,
-                zg: zg
-            });
-        }.bind(this));
-
-        SensorManager.startOrientation(300);
-        DeviceEventEmitter.addListener('Orientation', function (data) {
-            var azimuth = data.azimuth; // Yaw
-            var pitch = data.pitch;
-            var roll = data.roll;
-
-            this.setState({
-                azimuth: azimuth, // Yaw
-                pitch: pitch,
-                roll: roll
-            });
-
-        }.bind(this));
-
-        SensorManager.startStepCounter(300);
-        DeviceEventEmitter.addListener('StepCounter', function (data) {
-            var steps = data.steps;
-
-            this.setState({
-                steps: steps
-            });
-        }.bind(this));*/
     }
 
     fetchGeolocation(lat, lon, speed, accuracy, altitude, heading, activity) {
@@ -163,13 +121,6 @@ export default class masApp extends Component {
             .done();
     }
 
-
-
-    // shouldComponentUpdate(){
-    //     // return true;
-    //     return !this.textInput.isFocused();
-    // }
-
     textInput = (text) => {
         this.setState((state) =>{
             return {
@@ -180,8 +131,6 @@ export default class masApp extends Component {
     };
 
     render(){
-        // TODO: if prevLocation =! New location then this.fetchGeolocation
-        // this.fetchGeolocation(this.state.lat,this.state.lon,this.state.speed,this.state.accuracy, this.state.altitude, this.state.heading, this.state.activity);
         return (
             <View>
               <Text>
@@ -193,10 +142,8 @@ export default class masApp extends Component {
                 <Text style={styles.title}>X: </Text> {this.state.x} <Text>{'\n'}</Text>
                 <Text style={styles.title}>Y: </Text> {this.state.y} <Text>{'\n'}</Text>
                 <Text style={styles.title}>Z: </Text> {this.state.z} <Text>{'\n'}</Text>
-
                 <Text style={styles.title}>Activity: </Text> {this.state.activity} <Text>{'\n'}</Text>
               </Text>
-
             <TextInput
 
                 style={{height: 40, borderColor: 'gray', borderWidth: 1}}

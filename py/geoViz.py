@@ -64,6 +64,7 @@ class GeoViz:
         geometry = [Point(xy) for xy in zip(df.LON, df.LAT)]
         df = df.drop(["LON", "LAT"], axis=1)
         geo_df = gpd.GeoDataFrame(df, geometry=geometry)
+
         with open(filename, "w") as f:
             f.write(geo_df.to_json())
 
